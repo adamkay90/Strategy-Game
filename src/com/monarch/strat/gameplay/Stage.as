@@ -3,7 +3,6 @@ package com.monarch.strat.gameplay {
 	import net.flashpunk.Entity;
 	import com.monarch.strat.Assets;
 	import flash.utils.*;
-	import net.flashpunk.graphics.Backdrop;
 	import net.flashpunk.World;
 	
 	/**
@@ -16,7 +15,7 @@ package com.monarch.strat.gameplay {
 		
 		public function Stage(xml:XML, world: World){
 			var definitions:Object = new Object;
-			for each (var definition:XML in xml.define){
+			for each (var definition:XML in xml["define"]){
 				definitions[definition.@char] = CellDefinition.fromXML(definition);
 			}
 			

@@ -1,17 +1,15 @@
 package com.monarch.strat.gameplay {
-	/**
-	 * @author forrest
-	 */
+
 	public class Stat {
 		
 		private var _modifiers:Vector.<Modifier> = new Vector.<Modifier>;
-		private var _value:int;
+		private var _pureValue:int;
 		
-		public function Stat(value:int) {
-			_value = value;
+		public function Stat(xml:XML) {
+			_pureValue = xml.@start;
 		}
 		
-		public function get value():int { return _value; }
+		public function get pureValue():int { return _pureValue; }
 
 		public function get modifiers():Vector.<Modifier> { return _modifiers; }
 		public function get modifierValue():int {
@@ -22,7 +20,7 @@ package com.monarch.strat.gameplay {
 			return total;
 		}
 
-		public function get current(): int { return value + modifierValue; }
+		public function get value(): int { return pureValue + modifierValue; }
 		
 		public function step():void {
 			for each (var modifier:Modifier in modifiers) {

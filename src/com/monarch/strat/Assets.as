@@ -78,6 +78,14 @@ package com.monarch.strat {
 			test: STAGES_TEST
 		};
 
+		/***** embed units *****/
+		[Embed(source="../../../../res/units/vincent.xml", mimeType="application/octet-stream")]
+		private static const UNITS_VINCENT:Class;
+
+		public static const units:Object = {
+			vincent: UNITS_VINCENT
+		};
+
 	}
 
 }

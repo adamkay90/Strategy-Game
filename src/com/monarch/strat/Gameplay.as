@@ -28,7 +28,8 @@ package com.monarch.strat {
 			menu.y = 50;
 			add(menu);
 			
-			unit = new Unit(Loc.at(9, 9));
+			var vincent:UnitDefinition = new UnitDefinition(XML(new Assets.units["vincent"]));
+			unit = new Unit(vincent, Loc.at(9, 9));
 			add(unit);
 		}
 		
