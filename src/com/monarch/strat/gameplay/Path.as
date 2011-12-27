@@ -25,7 +25,7 @@ package com.monarch.strat.gameplay {
 		
 		public function Path(start:Loc, path:Vector.<Loc>){
 			super();
-			this.layer = Layers.PATH_LAYER;
+			this.layer = Layers.PATH;
 
 			_start = start;
 			_path = path;

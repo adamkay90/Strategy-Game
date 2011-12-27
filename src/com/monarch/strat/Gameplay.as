@@ -10,12 +10,13 @@ package com.monarch.strat {
 	 * @author Forrest Jacobs
 	 */
 	public class Gameplay extends World {
-		private var stage:Stage;
+		private var _stage:Stage;
 		private var paths:Dictionary;
 		private var displayPath:Path = null;
+		private var unit:Unit;
 		
 		public function Gameplay(tag:String){
-			stage = new Stage(XML(new Assets.stages[tag]), this);
+			_stage = new Stage(XML(new Assets.stages[tag]), this);
 			
 			var menu:Menu = new Menu(Vector.<MenuItem>([
 				new MenuItem("Vincent's turn"),
@@ -27,23 +28,28 @@ package com.monarch.strat {
 			menu.y = 50;
 			add(menu);
 			
-			var unit:Unit = new Unit(Loc.at(9, 9));
+			unit = new Unit(Loc.at(9, 9));
 			add(unit);
-			
-			paths = stage.findPaths(Loc.at(9, 9), 13);
 		}
 		
+		public function get stage():Stage { return _stage; }
+	
 		override public function update():void {
 			super.update();
-			var mouseLoc:Loc = Loc.at(FP.world.mouseX / Cell.SIZE, FP.world.mouseY / Cell.SIZE);
-			var newDisplayPath:Path = paths[mouseLoc];
-			if(displayPath != newDisplayPath) {
-				if(displayPath != null) remove(displayPath);
-				displayPath = newDisplayPath;
-				if(displayPath != null) add(displayPath);
+			if (paths == null) {
+				paths = unit.paths;
+			}
+			if (paths != null) {
+				var mouseLoc:Loc = Loc.at(FP.world.mouseX / Cell.SIZE, FP.world.mouseY / Cell.SIZE);
+				var newDisplayPath:Path = paths[mouseLoc];
+				if(displayPath != newDisplayPath) {
+					if(displayPath != null) remove(displayPath);
+					displayPath = newDisplayPath;
+					if(displayPath != null) add(displayPath);
+				}
 			}
 		}
-	
+		
 	}
 
 }

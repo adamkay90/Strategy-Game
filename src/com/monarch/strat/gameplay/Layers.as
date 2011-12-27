@@ -4,9 +4,10 @@ package com.monarch.strat.gameplay {
 	 */
 	public class Layers {
 		
-		public static const BG_LAYER:uint = 3;
-		public static const PATH_LAYER:uint = 2;
-		public static const UNIT_LAYER:uint = 1;
+		public static const BG:uint = 4;
+		public static const CELL:uint = 3;
+		public static const PATH:uint = 2;
+		public static const UNIT:uint = 1;
 		
 	}
 }

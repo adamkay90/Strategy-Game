@@ -1,4 +1,5 @@
 package com.monarch.strat.gameplay {
+	import flash.utils.Dictionary;
 	import com.monarch.strat.Assets;
 	import net.flashpunk.graphics.Image;
 	/**
@@ -18,8 +19,9 @@ package com.monarch.strat.gameplay {
 		
 		public function Unit(loc: Loc) {
 			super(loc);
-			this.layer = Layers.UNIT_LAYER;
+			this.layer = Layers.UNIT;
 			this.graphic = new Image(Assets.cells["placeholder"]);
+			_speed = new Stat(12);
 		}
 		
 		public function get maxHP():Stat { return _maxHP; }
@@ -31,6 +33,11 @@ package com.monarch.strat.gameplay {
 		public function get luck():Stat { return _luck; }
 		public function get vitality():Stat { return _vitality; }
 		public function get resistance():Stat { return _resistance; }
+		
+		public function get paths():Dictionary {
+			if(stage == null) return null;
+			return stage.findPaths(loc, speed.current);
+		}
 		
 	}
 }

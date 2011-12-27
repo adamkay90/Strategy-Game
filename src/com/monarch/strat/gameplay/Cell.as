@@ -1,4 +1,5 @@
 package com.monarch.strat.gameplay {
+	import com.monarch.strat.Gameplay;
 	import net.flashpunk.Entity;
 	import net.flashpunk.graphics.Image;
 	
@@ -12,6 +13,7 @@ package com.monarch.strat.gameplay {
 		
 		public function Cell(loc:Loc, definition:CellDefinition = null) {
 			super(loc.x, loc.y);
+			this.layer = Layers.CELL;
 			if (definition == null)
 				definition = CellDefinition.DEFAULT;
 			_loc = loc;
@@ -19,6 +21,18 @@ package com.monarch.strat.gameplay {
 			_walkable = definition.walkable;
 			if (definition.graphic != null)
 				graphic = new Image(definition.graphic);
+		}
+		
+		public function get gameplay():Gameplay {
+			if(world != null && world is Gameplay)
+				return world as Gameplay;
+			return null;
+		}
+		
+		public function get stage():Stage {
+			if(gameplay != null)
+				return gameplay.stage;
+			return null;
 		}
 		
 		private var _loc:Loc;

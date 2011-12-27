@@ -27,7 +27,7 @@ package com.monarch.strat.gameplay {
 			var backdrop:Entity = new Entity(0, 0,
 				new TiledImage(Assets.backgrounds[xml.@background],
 				               width * Cell.SIZE, height * Cell.SIZE));
-			backdrop.layer = Layers.BG_LAYER;
+			backdrop.layer = Layers.BG;
 			world.add(backdrop);
 			
 			cellMap = new Vector.<Cell>(width * height);

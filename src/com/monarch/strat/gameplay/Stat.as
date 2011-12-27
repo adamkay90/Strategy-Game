@@ -5,8 +5,11 @@ package com.monarch.strat.gameplay {
 	public class Stat {
 		
 		private var _modifiers:Vector.<Modifier> = new Vector.<Modifier>;
-		
 		private var _value:int;
+		
+		public function Stat(value:int) {
+			_value = value;
+		}
 		
 		public function get value():int { return _value; }
 
