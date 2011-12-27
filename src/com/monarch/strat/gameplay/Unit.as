@@ -18,6 +18,7 @@ package com.monarch.strat.gameplay {
 		
 		public function Unit(loc: Loc) {
 			super(loc);
+			this.layer = Layers.UNIT_LAYER;
 			this.graphic = new Image(Assets.cells["placeholder"]);
 		}
 		

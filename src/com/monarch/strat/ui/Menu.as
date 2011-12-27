@@ -11,7 +11,8 @@ package com.monarch.strat.ui {
 		public static const PADDING:uint = 2;
 		
 		private var items:Vector.<MenuItem>;
-		private var textWidth:int = 0;
+		private var innerWidth:int = 0;
+		private var innerHeight:int = 0;
 		private var background:TiledImage;
 		private var selection:TiledImage;
 		
@@ -19,51 +20,54 @@ package com.monarch.strat.ui {
 			super();
 			this.items = items;
 			var item:MenuItem;
-			for each (item in items)
-				textWidth = Math.max(textWidth, item.width);
+			for each (item in items) {
+				innerWidth = Math.max(innerWidth, item.width);
+				innerHeight += item.height;
+			}
+			
+			for each (item in items) {
+				item.width = innerWidth;
+			}
+			
+			this.width = innerWidth + 2 * PADDING;
+			this.height = innerHeight + 2 * PADDING;
 
-			background = new TiledImage(Assets.backgrounds["menu"],
-				textWidth + 2 * (MenuItem.X_PADDING + PADDING), 
-				2 * PADDING + items.length * (MenuItem.HEIGHT + 2 * MenuItem.Y_PADDING));
+			background = new TiledImage(Assets.backgrounds["menu"], width, height);
 			background.alpha = 0.5;
 			addGraphic(background);
 			
-			selection = new TiledImage(Assets.backgrounds["selected"],
-				textWidth + 2 * MenuItem.X_PADDING,
-				MenuItem.HEIGHT + 2 * MenuItem.Y_PADDING);
+			selection = new TiledImage(Assets.backgrounds["selected"], innerWidth, MenuItem.HEIGHT);
 			selection.x = PADDING;
 			selection.visible = false;
 			addGraphic(selection);
 			
-			var lastY:int = PADDING;
+			var currentY:int = PADDING;
 			for (var i:uint = 0; i < items.length; ++i) {
 				item = items[i];
-				item.x = PADDING + MenuItem.X_PADDING;
-				item.y = lastY + MenuItem.Y_PADDING;
-				lastY = item.yEnd;
+				item.x = PADDING;
+				item.y = currentY;
 				addGraphic(item);
+				currentY += item.height;
 			}
 		}
 		
-		private function getSelected(mouseX:int, mouseY:int):int {
+		private function getSelected(mouseX:int, mouseY:int):MenuItem {
 			var relMouseX:int = mouseX - x;
 			var relMouseY:int = mouseY - y;
-			if(relMouseX < PADDING || relMouseX >= PADDING + textWidth + 2 * MenuItem.X_PADDING) return -1;
-			if(relMouseY < PADDING) return -1;
-			for (var i:uint = 0; i < items.length; ++i) {
-				var item:MenuItem = items[i];
-				if(item.isSelectable && relMouseY >= item.yStart && relMouseY < item.yEnd) return i;
+			if(relMouseX < PADDING || relMouseY < PADDING || relMouseX >= PADDING + innerWidth) return null;
+			for each (var item:MenuItem in items) {
+				if(item.isSelectable && relMouseY >= item.y && relMouseY < item.y + item.height) return item;
 			}
-			return -1;
+			return null;
 		}
 		
 		public override function update():void {
-			var selected:int = getSelected(FP.world.mouseX, FP.world.mouseY);
-			if(selected == -1) selection.visible = false;
+			var selected:MenuItem = getSelected(FP.world.mouseX, FP.world.mouseY);
+			if(selected == null) selection.visible = false;
 			else {
 				trace(selected);
+				selection.y = selected.y;
 				selection.visible = true;
-				selection.y = items[selected].yStart;
 			}
 		}
 		
