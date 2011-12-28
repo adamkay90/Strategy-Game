@@ -14,13 +14,13 @@ package com.monarch.strat.gameplay {
 		public function Cell(loc:Loc, definition:CellDefinition = null) {
 			super(loc.x, loc.y);
 			this.layer = Layers.CELL;
-			if (definition == null)
-				definition = CellDefinition.DEFAULT;
 			_loc = loc;
-			_cost = definition.cost;
-			_walkable = definition.walkable;
-			if (definition.graphic != null)
-				graphic = new Image(definition.graphic);
+			if (definition != null) {
+				_cost = definition.cost;
+				_walkable = definition.walkable;
+				if (definition.graphic != null)
+					graphic = new Image(definition.graphic);
+			}
 		}
 		
 		public function get gameplay():Gameplay {

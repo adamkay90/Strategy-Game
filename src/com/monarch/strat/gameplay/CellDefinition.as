@@ -7,7 +7,6 @@ package com.monarch.strat.gameplay {
 	 */
 	public class CellDefinition {
 		
-		public static const DEFAULT:CellDefinition = new CellDefinition;
 		public static const DEFAULT_COST:uint = 1;
 		public static const DEFAULT_WALKABLE:Boolean = true;
 		
@@ -15,13 +14,13 @@ package com.monarch.strat.gameplay {
 		private var _walkable:Boolean;
 		private var _graphic:Class;
 		
-		public function CellDefinition(cost:uint = 1, walkable:Boolean = true, graphic:Class = null){
+		public function CellDefinition(cost:uint = DEFAULT_COST, walkable:Boolean = DEFAULT_WALKABLE, graphic:Class = null){
 			_cost = cost;
 			_walkable = walkable;
 			_graphic = graphic;
 		}
 		
-		public static function fromXML(node:XML):CellDefinition {
+		public static function fromXML(node:XML, defaultBG:Class):CellDefinition {
 			var cost:uint = DEFAULT_COST;
 			if ("@cost" in node)
 				cost = node.@cost;
@@ -33,6 +32,8 @@ package com.monarch.strat.gameplay {
 			var graphic:Class = null;
 			if ("@graphic" in node)
 				graphic = Assets.backgrounds[node.@graphic];
+			else
+				graphic = defaultBG;
 			
 			return new CellDefinition(cost, walkable, graphic);
 		}

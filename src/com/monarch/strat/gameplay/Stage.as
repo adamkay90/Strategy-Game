@@ -1,6 +1,4 @@
 package com.monarch.strat.gameplay {
-	import net.flashpunk.graphics.TiledImage;
-	import net.flashpunk.Entity;
 	import com.monarch.strat.Assets;
 	import flash.utils.*;
 	import net.flashpunk.World;
@@ -14,26 +12,29 @@ package com.monarch.strat.gameplay {
 		private var cellMap:Vector.<Cell>;
 		
 		public function Stage(xml:XML, world: World){
+			var backdrop:Class = Assets.backgrounds[xml.@background];
+			var defaultDefinition:CellDefinition = new CellDefinition(
+				CellDefinition.DEFAULT_COST,
+				CellDefinition.DEFAULT_WALKABLE,
+				backdrop);
+
 			var definitions:Object = new Object;
-			for each (var definition:XML in xml["define"]){
-				definitions[definition.@char] = CellDefinition.fromXML(definition);
+			for each (var xmlDef:XML in xml["define"]){
+				definitions[xmlDef.@char] = CellDefinition.fromXML(xmlDef, backdrop);
 			}
 			
 			var charMap:Array = xml.child("charmap").toString().split("\n");
 			_height = charMap.length;
 			_width = (charMap[0] as String).length;
 			
-			var backdrop:Entity = new Entity(0, 0,
-				new TiledImage(Assets.backgrounds[xml.@background],
-				               width * Cell.SIZE, height * Cell.SIZE));
-			backdrop.layer = Layers.BG;
-			world.add(backdrop);
-			
 			cellMap = new Vector.<Cell>(width * height);
 			for (var y:uint = 0; y < height; ++y){
 				for (var x:uint = 0; x < width; ++x){
 					var loc:Loc = Loc.at(x, y);
-					var cell:Cell = new Cell(loc, definitions[(charMap[y] as String).charAt(x)]);
+					var definition:CellDefinition = definitions[(charMap[y] as String).charAt(x)];
+					if(definition == null)
+						definition = defaultDefinition;
+					var cell:Cell = new Cell(loc, definition);
 					world.add(cell);
 					cellMap[index(loc)] = cell;
 				}

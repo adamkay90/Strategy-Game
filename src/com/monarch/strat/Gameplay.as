@@ -1,4 +1,5 @@
 package com.monarch.strat {
+	import net.flashpunk.graphics.Image;
 	import flash.utils.Dictionary;
 	import com.monarch.strat.ui.MenuItem;
 	import com.monarch.strat.ui.Menu;
@@ -39,6 +40,12 @@ package com.monarch.strat {
 			super.update();
 			if (paths == null) {
 				paths = unit.paths;
+				for (var reachable:Object in paths) {
+					var cell:Cell = stage.cellAt(reachable as Loc);
+					if(cell != null) {
+						(cell.graphic as Image).color = 0x00FF00;
+					}
+				}
 			}
 			if (paths != null) {
 				var mouseLoc:Loc = Loc.at(FP.world.mouseX / Cell.SIZE, FP.world.mouseY / Cell.SIZE);
