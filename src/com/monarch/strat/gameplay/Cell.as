@@ -1,60 +1,29 @@
 package com.monarch.strat.gameplay {
-	import com.monarch.strat.Gameplay;
-	import net.flashpunk.Entity;
 	import net.flashpunk.graphics.Image;
 	
-	/**
-	 * ...
-	 * @author Forrest Jacobs
-	 */
-	public class Cell extends Entity {
+	public class Cell extends GridBlock {
 		
-		public static const SIZE:uint = 24;
-		
-		public function Cell(loc:Loc, definition:CellDefinition = null) {
-			super(loc.x, loc.y);
-			this.layer = Layers.CELL;
-			_loc = loc;
-			if (definition != null) {
-				_cost = definition.cost;
-				_walkable = definition.walkable;
-				if (definition.graphic != null)
-					graphic = new Image(definition.graphic);
-			}
-		}
-		
-		public function get gameplay():Gameplay {
-			if(world != null && world is Gameplay)
-				return world as Gameplay;
-			return null;
-		}
-		
-		public function get stage():Stage {
-			if(gameplay != null)
-				return gameplay.stage;
-			return null;
-		}
-		
-		private var _loc:Loc;
-		
-		public function get loc():Loc {
-			return _loc;
-		}
-		
-		private var _cost:uint;
-		
-		public function get cost():uint {
-			return _cost;
-		}
-		
-		private var _walkable:Boolean;
-		
-		public function get walkable():Boolean {
-			return _walkable;
-		}
-		
+		private var definition:CellDefinition;
+
 		private var _distance:uint = uint.MAX_VALUE;
 		private var _previous:Cell = null;
+		
+		public function Cell(loc:Loc, definition:CellDefinition = null) {
+			super(loc);
+
+			layer = Layers.CELL;
+			graphic = new Image(definition.graphic);
+
+			this.definition = definition;
+		}
+		
+		public function get cost():uint {
+			return definition.cost;
+		}
+		
+		public function get walkable():Boolean {
+			return definition.walkable;
+		}
 		
 		public function get distance():uint {
 			return _distance;

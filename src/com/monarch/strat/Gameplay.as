@@ -21,9 +21,9 @@ package com.monarch.strat {
 			
 			var menu:Menu = new Menu(Vector.<MenuItem>([
 				new MenuItem("Vincent's turn"),
-				new MenuItem("Move", function():void {}),
-				new MenuItem("Attack", function():void {}),
-				new MenuItem("End Turn", function():void {})
+				new MenuItem("Move", function():void { trace("Selected MOVE"); }),
+				new MenuItem("Attack", function():void { trace("Selected ATTACK"); }),
+				new MenuItem("End Turn", function():void { trace("Selected END TURN"); })
 			]));
 			menu.x = 50;
 			menu.y = 50;
@@ -48,7 +48,7 @@ package com.monarch.strat {
 				}
 			}
 			if (paths != null) {
-				var mouseLoc:Loc = Loc.at(FP.world.mouseX / Cell.SIZE, FP.world.mouseY / Cell.SIZE);
+				var mouseLoc:Loc = Loc.at(FP.world.mouseX / GridBlock.SIZE, FP.world.mouseY / GridBlock.SIZE);
 				var newDisplayPath:Path = paths[mouseLoc];
 				if(displayPath != newDisplayPath) {
 					if(displayPath != null) remove(displayPath);

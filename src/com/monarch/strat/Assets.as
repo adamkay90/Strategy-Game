@@ -12,6 +12,9 @@ package com.monarch.strat {
 		[Embed(source="../../../../res/backgrounds/menu.png")]
 		private static const BACKGROUNDS_MENU:Class;
 
+		[Embed(source="../../../../res/backgrounds/mud.png")]
+		private static const BACKGROUNDS_MUD:Class;
+
 		[Embed(source="../../../../res/backgrounds/selected.png")]
 		private static const BACKGROUNDS_SELECTED:Class;
 
@@ -19,6 +22,7 @@ package com.monarch.strat {
 			caution: BACKGROUNDS_CAUTION,
 			grass: BACKGROUNDS_GRASS,
 			menu: BACKGROUNDS_MENU,
+			mud: BACKGROUNDS_MUD,
 			selected: BACKGROUNDS_SELECTED
 		};
 

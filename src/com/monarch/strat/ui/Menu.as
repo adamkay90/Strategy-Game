@@ -1,4 +1,5 @@
 package com.monarch.strat.ui {
+	import net.flashpunk.utils.Input;
 	import net.flashpunk.FP;
 	import net.flashpunk.graphics.TiledImage;
 	import com.monarch.strat.Assets;
@@ -39,6 +40,7 @@ package com.monarch.strat.ui {
 			selection = new TiledImage(Assets.backgrounds["selected"], innerWidth, MenuItem.HEIGHT);
 			selection.x = PADDING;
 			selection.visible = false;
+			selection.alpha = 0.8;
 			addGraphic(selection);
 			
 			var currentY:int = PADDING;
@@ -65,9 +67,10 @@ package com.monarch.strat.ui {
 			var selected:MenuItem = getSelected(FP.world.mouseX, FP.world.mouseY);
 			if(selected == null) selection.visible = false;
 			else {
-				trace(selected);
 				selection.y = selected.y;
 				selection.visible = true;
+				if(Input.mouseReleased)
+					selected.run();
 			}
 		}
 		
