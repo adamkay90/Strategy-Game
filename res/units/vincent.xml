@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <unit team="friend" portrait="vince">
-	
-	<name nick="Vince" first="Vincent" last="Ingram" />
+	<name first="Vincent" last="Ingram" />
+
 	
 	<stat type="maxHP"      start="20" levelUp="75" />
 	<stat type="strength"   start="5"  levelUp="50" />

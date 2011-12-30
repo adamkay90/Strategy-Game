@@ -45,7 +45,7 @@ package com.monarch.strat.gameplay {
 		}
 		
 		public function get y():uint {
-			return row * Cell.SIZE;
+			return row * GridBlock.SIZE;
 		}
 		
 		private var _col:uint;
@@ -55,7 +55,7 @@ package com.monarch.strat.gameplay {
 		}
 		
 		public function get x():uint {
-			return col * Cell.SIZE;
+			return col * GridBlock.SIZE;
 		}
 		
 		// Gets the direction to the next loc

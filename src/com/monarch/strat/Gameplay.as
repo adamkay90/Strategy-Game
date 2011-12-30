@@ -1,46 +1,59 @@
 package com.monarch.strat {
+	import net.flashpunk.utils.Input;
 	import net.flashpunk.graphics.Image;
-	import flash.utils.Dictionary;
-	import com.monarch.strat.ui.MenuItem;
-	import com.monarch.strat.ui.Menu;
+	import com.monarch.strat.ui.Item;
+	import com.monarch.strat.ui.List;
 	import com.monarch.strat.gameplay.*;
 	import net.flashpunk.*;
 	
-	/**
-	 * ...
-	 * @author Forrest Jacobs
-	 */
 	public class Gameplay extends World {
+		
 		private var _stage:Stage;
-		private var paths:Dictionary;
-		private var displayPath:Path = null;
-		private var unit:Unit;
+		private var updateFun:Function = unitSelectStart;
+		
+		private var units:Object = new Object;
+		private var currentUnit:Unit = null;
+		
+		private var display:List;
+		private var selector:GridBlock;
+
+		private var mouseLoc:Loc;
+		private var isNewMouseLoc:Boolean;
 		
 		public function Gameplay(tag:String){
 			_stage = new Stage(XML(new Assets.stages[tag]), this);
+
+			display = new List(Vector.<Item>([new Item("")]));
+			display.x = 0;
+			display.y = 0;
+			add(display);
 			
-			
+			selector = new GridBlock(Loc.at(0, 0));
+			selector.graphic = new Image(Assets.cells["select"]);
+			selector.layer = Layers.SELECTOR;
+			selector.visible = false;
+			add(selector);
+
 			var vincent:UnitDefinition = new UnitDefinition(XML(new Assets.units["vincent"]));
-			unit = new Unit(vincent, Loc.at(9, 9));
-			add(unit);
-			
-			var menu:Menu = new Menu(Vector.<MenuItem>([
-				new MenuItem("Vincent's turn"),
-				new MenuItem("Move", function():void {}),
-				new MenuItem("Attack", function():void { } ),
-				new MenuItem("Level Up", vincent.unmodifiedLevelUp),
-				new MenuItem("End Turn", function():void {})
-			]));
-			menu.x = 50;
-			menu.y = 50;
-			add(menu);
-			
+			var vincentUnit:Unit = new Unit(vincent, Loc.at(9, 9));
+			units["friend"] = Vector.<Unit>([vincentUnit]);
+			add(vincentUnit);
+
 		}
 		
 		public function get stage():Stage { return _stage; }
-	
+		
 		override public function update():void {
 			super.update();
+			var currentMouseLoc:Loc = Loc.at(FP.world.mouseX / GridBlock.SIZE, FP.world.mouseY / GridBlock.SIZE);
+			if(currentMouseLoc != mouseLoc) {
+				mouseLoc = currentMouseLoc;
+				isNewMouseLoc = true;
+			}
+			else isNewMouseLoc = false;
+			if(updateFun != null)
+				updateFun.call(this);
+			/*
 			if (paths == null) {
 				paths = unit.paths;
 				for (var reachable:Object in paths) {
@@ -51,7 +64,7 @@ package com.monarch.strat {
 				}
 			}
 			if (paths != null) {
-				var mouseLoc:Loc = Loc.at(FP.world.mouseX / Cell.SIZE, FP.world.mouseY / Cell.SIZE);
+				var mouseLoc:Loc = Loc.at(FP.world.mouseX / GridBlock.SIZE, FP.world.mouseY / GridBlock.SIZE);
 				var newDisplayPath:Path = paths[mouseLoc];
 				if(displayPath != newDisplayPath) {
 					if(displayPath != null) remove(displayPath);
@@ -59,8 +72,52 @@ package com.monarch.strat {
 					if(displayPath != null) add(displayPath);
 				}
 			}
+			*/
 		}
 		
+		private function unitAt(loc:Loc, team:String = null):Unit {
+			if(team != null) {
+				for each(var unit:Unit in units[team]) {
+					if(unit.loc == loc)
+						return unit;
+				}
+			}
+			return null;
+		}
+		
+		private function unitSelectStart():void {
+			display.items[0].text.text = "Select a unit";
+			display.resize();
+
+			selector.visible = true;
+			selector.loc = mouseLoc;
+
+			updateFun = unitSelect;
+			unitSelect();
+		}
+		
+		private function unitSelect():void {
+			if(isNewMouseLoc) selector.loc = mouseLoc;
+			if(Input.mouseReleased) {
+				var selectedUnit:Unit = unitAt(mouseLoc, "friend");
+				if(selectedUnit != null) {
+					selector.visible = false;
+					select(selectedUnit);
+				}
+			}
+		}
+		
+		private function select(unit:Unit): void {
+			currentUnit = unit;
+			add(new List(Vector.<Item>([
+				new Item(unit.definition.nickName + "'s turn"),
+				new Item("Move"),
+				new Item("Attack"),
+				new Item("Cancel", unitSelectStart)
+			])));
+			updateFun = null;
+		}
+	
 	}
 
 }
