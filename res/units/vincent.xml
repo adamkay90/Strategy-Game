@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <unit team="friend" portrait="vince">
 	
-	<name nick="Vince" first="Vincent" last="Vega" />
+	<name nick="Vince" first="Vincent" last="Ingram" />
 	
-	<stat type="maxHP"      start="20" levelUp="5/2" max="60" />
-	<stat type="strength"   start="5"  levelUp="1/1" max="20" />
-	<stat type="magic"      start="3"  levelUp="1/4" max="20" />
-	<stat type="skill"      start="5"  levelUp="1/1" max="20" />
-	<stat type="speed"      start="8"  levelUp="2/3" max="20" />
-	<stat type="luck"       start="5"  levelUp="3/2" max="20" />
-	<stat type="vitality"   start="3"  levelUp="3/2" max="20" />
-	<stat type="resistance" start="4"  levelUp="3/4" max="20" />
+	<stat type="maxHP"      start="20" levelUp="75" />
+	<stat type="strength"   start="5"  levelUp="50" />
+	<stat type="magic"      start="0"  levelUp="0"  />
+	<stat type="skill"      start="5"  levelUp="45" />
+	<stat type="speed"      start="8"  levelUp="40" />
+	<stat type="luck"       start="5"  levelUp="30" />
+	<stat type="vitality"   start="3"  levelUp="45" />
+	<stat type="resistance" start="4"  levelUp="20" />
+	<stat type="movement"   start="5"  levelUp="0" />
 	
 </unit>

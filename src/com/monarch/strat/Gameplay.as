@@ -19,19 +19,22 @@ package com.monarch.strat {
 		public function Gameplay(tag:String){
 			_stage = new Stage(XML(new Assets.stages[tag]), this);
 			
+			
+			var vincent:UnitDefinition = new UnitDefinition(XML(new Assets.units["vincent"]));
+			unit = new Unit(vincent, Loc.at(9, 9));
+			add(unit);
+			
 			var menu:Menu = new Menu(Vector.<MenuItem>([
 				new MenuItem("Vincent's turn"),
 				new MenuItem("Move", function():void {}),
-				new MenuItem("Attack", function():void {}),
+				new MenuItem("Attack", function():void { } ),
+				new MenuItem("Level Up", vincent.unmodifiedLevelUp),
 				new MenuItem("End Turn", function():void {})
 			]));
 			menu.x = 50;
 			menu.y = 50;
 			add(menu);
 			
-			var vincent:UnitDefinition = new UnitDefinition(XML(new Assets.units["vincent"]));
-			unit = new Unit(vincent, Loc.at(9, 9));
-			add(unit);
 		}
 		
 		public function get stage():Stage { return _stage; }

@@ -65,7 +65,6 @@ package com.monarch.strat.ui {
 			var selected:MenuItem = getSelected(FP.world.mouseX, FP.world.mouseY);
 			if(selected == null) selection.visible = false;
 			else {
-				trace(selected);
 				selection.y = selected.y;
 				selection.visible = true;
 			}

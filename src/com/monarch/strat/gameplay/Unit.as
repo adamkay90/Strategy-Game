@@ -21,8 +21,8 @@ package com.monarch.strat.gameplay {
 		
 		public function get paths():Dictionary {
 			if(stage == null) return null;
-			return stage.findPaths(loc, (stats["speed"] as Stat).value);
+			return stage.findPaths(loc, (stats["movement"] as Stat).value);
 		}
-		
+
 	}
 }
