@@ -9,9 +9,10 @@ package com.monarch.strat {
 	public class Gameplay extends World {
 		
 		private var _stage:Stage;
-		private var currentUpdateFunction:Function = unitSelectStart;
+		private var updateFun:Function = unitSelectStart;
 		
 		private var units:Object = new Object;
+		private var currentUnit:Unit = null;
 		
 		private var display:List;
 		private var selector:GridBlock;
@@ -49,7 +50,8 @@ package com.monarch.strat {
 				isNewMouseLoc = true;
 			}
 			else isNewMouseLoc = false;
-			currentUpdateFunction.call(this);
+			if(updateFun != null)
+				updateFun.call(this);
 			/*
 			if (paths == null) {
 				paths = unit.paths;
@@ -84,11 +86,12 @@ package com.monarch.strat {
 		
 		private function unitSelectStart():void {
 			display.items[0].text.text = "Select a unit";
+			display.resize();
 
 			selector.visible = true;
 			selector.loc = mouseLoc;
 
-			currentUpdateFunction = unitSelect;
+			updateFun = unitSelect;
 			unitSelect();
 		}
 		
@@ -98,29 +101,20 @@ package com.monarch.strat {
 				var selectedUnit:Unit = unitAt(mouseLoc, "friend");
 				if(selectedUnit != null) {
 					selector.visible = false;
-					unitMenuStart();
+					select(selectedUnit);
 				}
 			}
 		}
 		
-		private function unitMenuStart(): void {
+		private function select(unit:Unit): void {
+			currentUnit = unit;
 			add(new List(Vector.<Item>([
-				new Item("VINCENT's turn"),
+				new Item(unit.definition.nickName + "'s turn"),
 				new Item("Move"),
 				new Item("Attack"),
-				new Item(
-					"Cancel",
-					function():void{
-						unitSelectStart();
-					})
+				new Item("Cancel", unitSelectStart)
 			])));
-			
-			currentUpdateFunction = unitMenu;
-			unitMenu();
-		}
-		
-		private function unitMenu(): void {
-			
+			updateFun = null;
 		}
 	
 	}

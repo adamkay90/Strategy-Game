@@ -20,18 +20,8 @@ package com.monarch.strat.ui {
 		public function List(items:Vector.<Item>) {
 			super();
 			_items = items;
-			var item:Item;
-			for each (item in items) {
-				innerWidth = Math.max(innerWidth, item.width);
-				innerHeight += item.height;
-			}
 			
-			for each (item in items) {
-				item.width = innerWidth;
-			}
-			
-			this.width = innerWidth + 2 * PADDING;
-			this.height = innerHeight + 2 * PADDING;
+			resize();
 
 			background = new TiledImage(Assets.backgrounds["menu"], width, height);
 			background.alpha = 0.5;
@@ -45,11 +35,37 @@ package com.monarch.strat.ui {
 			
 			var currentY:int = PADDING;
 			for (var i:uint = 0; i < items.length; ++i) {
-				item = items[i];
+				var item:Item = items[i];
 				item.x = PADDING;
 				item.y = currentY;
 				addGraphic(item);
 				currentY += item.height;
+			}
+		}
+		
+		public function resize():void {
+			var item:Item;
+			innerHeight = 0;
+			for each (item in items) {
+				item.update();
+				innerWidth = Math.max(innerWidth, item.width);
+				innerHeight += item.height;
+			}
+			
+			for each (item in items) {
+				item.width = innerWidth;
+			}
+			
+			width = innerWidth + 2 * PADDING;
+			height = innerHeight + 2 * PADDING;
+			
+			if(background != null) {
+				background.width = width;
+				background.height = height;
+			}
+			
+			if(selection != null) {
+				selection.width = innerWidth;
 			}
 		}
 		

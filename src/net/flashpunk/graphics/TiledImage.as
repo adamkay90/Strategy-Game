@@ -96,6 +96,16 @@ package net.flashpunk.graphics
 			updateBuffer();
 		}
 		
+		public function set width(value:uint):void {
+			_width = value;
+			updateBuffer();
+		}
+		
+		public function set height(value:uint):void {
+			_height = value;
+			updateBuffer();
+		}
+		
 		// Drawing information.
 		/** @private */ private var _graphics:Graphics = FP.sprite.graphics;
 		/** @private */ private var _texture:BitmapData;
