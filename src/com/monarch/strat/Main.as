@@ -1,8 +1,4 @@
 package com.monarch.strat {
-	/**
-	 * ...
-	 * @author Forrest Jacobs
-	 */
 	
 	import net.flashpunk.*;
 	

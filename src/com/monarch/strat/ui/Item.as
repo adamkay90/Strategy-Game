@@ -3,7 +3,7 @@ package com.monarch.strat.ui {
 	/**
 	 * @author forrest
 	 */
-	public class MenuItem extends Block {
+	public class Item extends Block {
 		
 		public static const X_PADDING:uint = 16;
 		public static const Y_PADDING:uint = 3;
@@ -11,12 +11,13 @@ package com.monarch.strat.ui {
 		public static const HEIGHT:uint = TEXT_HEIGHT + 2 * Y_PADDING;
 		
 		private var action:Function;
+		private var textGraphic:Text;
 		
-		public function MenuItem(text:String, action:Function = null) {
+		public function Item(text:String, action:Function = null) {
 			super();
 			this.action = action;
 
-			var textGraphic:Text = new Text(text);
+			textGraphic = new Text(text);
 			textGraphic.x = X_PADDING;
 			textGraphic.y = Y_PADDING;
 			add(textGraphic);
@@ -26,8 +27,17 @@ package com.monarch.strat.ui {
 		
 		public function get isSelectable():Boolean { return action != null; }
 		
+		public function get text():Text { return textGraphic; }
+		
+		public override function update():void {
+			this.minWidth = textGraphic.textWidth + 2 * X_PADDING;
+		}
+		
 		internal function run(): void {
-			if(action != null) action.call(null, this);
+			if(action != null) {
+				action.call(null);
+				
+			}
 		}
 		
 	}

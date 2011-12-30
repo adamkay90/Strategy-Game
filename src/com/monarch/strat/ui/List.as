@@ -7,20 +7,20 @@ package com.monarch.strat.ui {
 	/**
 	 * @author forrest
 	 */
-	public class Menu extends Entity {
+	public class List extends Entity {
 		
 		public static const PADDING:uint = 2;
 		
-		private var items:Vector.<MenuItem>;
+		private var _items:Vector.<Item>;
 		private var innerWidth:int = 0;
 		private var innerHeight:int = 0;
 		private var background:TiledImage;
 		private var selection:TiledImage;
 		
-		public function Menu(items:Vector.<MenuItem>) {
+		public function List(items:Vector.<Item>) {
 			super();
-			this.items = items;
-			var item:MenuItem;
+			_items = items;
+			var item:Item;
 			for each (item in items) {
 				innerWidth = Math.max(innerWidth, item.width);
 				innerHeight += item.height;
@@ -37,7 +37,7 @@ package com.monarch.strat.ui {
 			background.alpha = 0.5;
 			addGraphic(background);
 			
-			selection = new TiledImage(Assets.backgrounds["selected"], innerWidth, MenuItem.HEIGHT);
+			selection = new TiledImage(Assets.backgrounds["selected"], innerWidth, Item.HEIGHT);
 			selection.x = PADDING;
 			selection.visible = false;
 			selection.alpha = 0.8;
@@ -53,24 +53,28 @@ package com.monarch.strat.ui {
 			}
 		}
 		
-		private function getSelected(mouseX:int, mouseY:int):MenuItem {
+		public function get items():Vector.<Item> { return _items; }
+		
+		private function getSelected(mouseX:int, mouseY:int):Item {
 			var relMouseX:int = mouseX - x;
 			var relMouseY:int = mouseY - y;
 			if(relMouseX < PADDING || relMouseY < PADDING || relMouseX >= PADDING + innerWidth) return null;
-			for each (var item:MenuItem in items) {
+			for each (var item:Item in _items) {
 				if(item.isSelectable && relMouseY >= item.y && relMouseY < item.y + item.height) return item;
 			}
 			return null;
 		}
 		
 		public override function update():void {
-			var selected:MenuItem = getSelected(FP.world.mouseX, FP.world.mouseY);
+			var selected:Item = getSelected(FP.world.mouseX, FP.world.mouseY);
 			if(selected == null) selection.visible = false;
 			else {
 				selection.y = selected.y;
 				selection.visible = true;
-				if(Input.mouseReleased)
+				if(Input.mouseReleased) {
 					selected.run();
+					world.remove(this);
+				}
 			}
 		}
 		

@@ -27,7 +27,8 @@ package com.monarch.strat.gameplay {
 		
 		public function set loc(value:Loc):void {
 			_loc = value;
-			setOrigin(value.x, value.y);
+			x = value.x;
+			y = value.y;
 		}
 		
 	}
