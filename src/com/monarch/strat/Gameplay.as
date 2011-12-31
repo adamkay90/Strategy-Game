@@ -23,7 +23,7 @@ package com.monarch.strat {
 		public function Gameplay(tag:String){
 			_stage = new Stage(XML(new Assets.stages[tag]), this);
 
-			display = new List(Vector.<Item>([new Item("")]));
+			display = new List(Vector.<Item>([new Item("")]), 800);
 			display.x = 0;
 			display.y = 0;
 			add(display);
@@ -86,7 +86,6 @@ package com.monarch.strat {
 		
 		private function unitSelectStart():void {
 			display.items[0].text.text = "Select a unit";
-			display.resize();
 
 			selector.visible = true;
 			selector.loc = mouseLoc;
@@ -107,13 +106,17 @@ package com.monarch.strat {
 		}
 		
 		private function select(unit:Unit): void {
+			display.items[0].text.text = "Choose an action";
 			currentUnit = unit;
-			add(new List(Vector.<Item>([
+			var menu:List = new List(Vector.<Item>([
 				new Item(unit.definition.nickName + "'s turn"),
 				new Item("Move"),
 				new Item("Attack"),
 				new Item("Cancel", unitSelectStart)
-			])));
+			]), 200);
+			menu.x = 800 - 200 - 10;
+			menu.y = 24 + 10;
+			add(menu);
 			updateFun = null;
 		}
 	
