@@ -1,4 +1,5 @@
 package com.monarch.strat {
+	import flash.utils.Dictionary;
 	import net.flashpunk.utils.Input;
 	import net.flashpunk.graphics.Image;
 	import com.monarch.strat.ui.Item;
@@ -52,26 +53,6 @@ package com.monarch.strat {
 			else isNewMouseLoc = false;
 			if(updateFun != null)
 				updateFun.call(this);
-			/*
-			if (paths == null) {
-				paths = unit.paths;
-				for (var reachable:Object in paths) {
-					var cell:Cell = stage.cellAt(reachable as Loc);
-					if(cell != null) {
-						(cell.graphic as Image).color = 0x00FF00;
-					}
-				}
-			}
-			if (paths != null) {
-				var mouseLoc:Loc = Loc.at(FP.world.mouseX / GridBlock.SIZE, FP.world.mouseY / GridBlock.SIZE);
-				var newDisplayPath:Path = paths[mouseLoc];
-				if(displayPath != newDisplayPath) {
-					if(displayPath != null) remove(displayPath);
-					displayPath = newDisplayPath;
-					if(displayPath != null) add(displayPath);
-				}
-			}
-			*/
 		}
 		
 		private function unitAt(loc:Loc, team:String = null):Unit {
@@ -110,7 +91,7 @@ package com.monarch.strat {
 			currentUnit = unit;
 			var menu:List = new List(Vector.<Item>([
 				new Item(unit.definition.nickName + "'s turn"),
-				new Item("Move"),
+				new Item("Move", moveStart),
 				new Item("Attack"),
 				new Item("Cancel", unitSelectStart)
 			]), 200);
@@ -118,6 +99,28 @@ package com.monarch.strat {
 			menu.y = 24 + 10;
 			add(menu);
 			updateFun = null;
+		}
+		
+		private var paths: Dictionary;
+		private function moveStart(): void {
+			display.items[0].text.text = "Choose a location";
+			paths = currentUnit.paths;
+			for (var reachable:Object in paths) {
+				var cell:Cell = stage.cellAt(reachable as Loc);
+				if(cell != null) {
+					(cell.graphic as Image).color = 0x00FF00;
+				}
+			}
+			updateFun = moveStage;
+		}
+		
+		private var displayPath: Path;
+		private function moveStage(): void {
+			if(isNewMouseLoc) {
+				if(displayPath != null) remove(displayPath);
+				displayPath = paths[mouseLoc];
+				if(displayPath != null) add(displayPath);
+			}
 		}
 	
 	}
