@@ -1,13 +1,18 @@
 package com.monarch.strat.gameplay {
 	
 	/**
-	 * Loc: Represents a location on the stage
+	 * Represents a location on the stage.
 	 * @author Forrest Jacobs
 	 */
 	public class Loc {
 		
-		// Creates a location.
-		// Do not use this directory--instead, call Loc.at
+		/**
+		 * The constructor for Loc.
+		 * @param col Column.
+		 * @param row Row.
+		 * @param access Used to prevent direct instantiation. Use Loc.at(col, row) instead.
+		 * @private
+		 */
 		public function Loc(col:uint, row:uint, access:Private){
 			if (access == null)
 				throw new Error("FACTORY_EXCEPTION");
@@ -15,50 +20,48 @@ package com.monarch.strat.gameplay {
 			_col = col;
 		}
 		
-		// Contains all the already constructed Locs
+		/** Contains all the already constructed Locs. Used by Loc.at(col, row). */
 		private static var sink:Vector.<Vector.<Loc>> = new Vector.<Vector.<Loc>>;
 		
-		// Creates/grabs a location for the given x and y.
+		/**
+		 * Creates or reuses a Loc at the given row and column
+		 * @param col Column.
+		 * @param row Row.
+		 * @return A Loc at the given row and column.
+		 */
 		public static function at(col:uint, row:uint):Loc {
 			if (sink.length <= row)
 				sink.length = row + 1;
+			if (sink[row] == null)
+				sink[row] = new Vector.<Loc>;
 			var sinkRow:Vector.<Loc> = sink[row];
-			if (sinkRow == null){
-				sinkRow = new Vector.<Loc>;
-				sink[row] = sinkRow;
-			}
+			
 			if (sinkRow.length <= col)
 				sinkRow.length = col + 1;
-			var loc:Loc = sinkRow[col];
-			if (loc == null){
-				loc = new Loc(col, row, new Private);
-				sinkRow[col] = loc;
-			}
-			return loc;
+			if (sinkRow[col] == null)
+				sinkRow[col] = new Loc(col, row, new Private);
+			return sinkRow[col];
 		}
 		
-		// Getters for row & col
+		/** The row. */
+		public function get row():uint { return _row; }
 		private var _row:uint;
 		
-		public function get row():uint {
-			return _row;
-		}
-		
-		public function get y():uint {
-			return row * GridBlock.SIZE;
-		}
-		
+		/** The column. */
+		public function get col():uint { return _col; }
 		private var _col:uint;
+
+		/** The y position on screen. */
+		public function get y():uint { return row * GridBlock.SIZE; }
 		
-		public function get col():uint {
-			return _col;
-		}
+		/** The x position on screen. */
+		public function get x():uint { return col * GridBlock.SIZE; }
 		
-		public function get x():uint {
-			return col * GridBlock.SIZE;
-		}
-		
-		// Gets the direction to the next loc
+		/**
+		 * Returns the Direction from the current Loc to the given Loc
+		 * @param dest The destination Loc.
+		 * @return The Direction pointing to the destination.
+		 */
 		public function directionTo(dest:Loc):uint {
 			if (row != 0 && dest == Loc.at(col, row - 1))
 				return Direction.NORTH;
@@ -72,9 +75,7 @@ package com.monarch.strat.gameplay {
 				return Direction.NONE;
 		}
 		
-		// Gets the neighbors (and caches them)
-		private var _neighbors:Vector.<Loc> = null;
-		
+		/** The neighbors in each Direction */
 		public function get neighbors():Vector.<Loc> {
 			if (_neighbors == null){
 				_neighbors = new Vector.<Loc>;
@@ -89,15 +90,10 @@ package com.monarch.strat.gameplay {
 			}
 			return _neighbors;
 		}
+		private var _neighbors:Vector.<Loc> = null;
 		
-		// Represents a location by the x and y
-		public function toString():String {
-			return "(" + col + ", " + row + ")";
-		}
-	
 	}
 
 }
 
-class Private {
-}
+internal class Private{}

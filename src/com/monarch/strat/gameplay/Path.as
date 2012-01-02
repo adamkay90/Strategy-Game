@@ -7,7 +7,6 @@ package com.monarch.strat.gameplay {
 	 * ...
 	 * @author Forrest Jacobs
 	 */
-	
 	public class Path extends Entity {
 		
 		public static const PATH_COLOR:uint = 0x33FF00;
