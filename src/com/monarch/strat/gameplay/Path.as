@@ -43,6 +43,9 @@ package com.monarch.strat.gameplay {
 		
 		public function get start(): Loc { return _start; }
 		public function get path(): Vector.<Loc> { return _path; }
+		public function get end(): Loc {
+			return path.length > 0 ? path[path.length - 1] : start;
+		}
 		
 		private function add(start:Loc, end:Loc):void {
 			var direction:uint = start.directionTo(end);

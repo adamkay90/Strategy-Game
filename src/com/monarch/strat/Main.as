@@ -10,7 +10,7 @@ package com.monarch.strat {
 
 		/** The constructor for Main. */		
 		public function Main(){
-			super(800, 600, 60, true);
+			super(800, 600, 60, false);
 			FP.world = new Gameplay("test");
 		}
 	

@@ -16,7 +16,7 @@ package com.monarch.strat {
 		private var currentUnit:Unit = null;
 		
 		private var display:List;
-		private var selector:GridBlock;
+		private var selector:Selector;
 
 		private var mouseLoc:Loc;
 		private var isNewMouseLoc:Boolean;
@@ -29,9 +29,7 @@ package com.monarch.strat {
 			display.y = 0;
 			add(display);
 			
-			selector = new GridBlock(Loc.at(0, 0));
-			selector.graphic = new Image(Assets.cells["select"]);
-			selector.layer = Layers.SELECTOR;
+			selector = new Selector();
 			selector.visible = false;
 			add(selector);
 
@@ -49,6 +47,9 @@ package com.monarch.strat {
 			if(currentMouseLoc != mouseLoc) {
 				mouseLoc = currentMouseLoc;
 				isNewMouseLoc = true;
+				if(selector.visible) {
+					selector.loc = mouseLoc;
+				}
 			}
 			else isNewMouseLoc = false;
 			if(updateFun != null)
@@ -69,14 +70,11 @@ package com.monarch.strat {
 			display.items[0].text.text = "Select a unit";
 
 			selector.visible = true;
-			selector.loc = mouseLoc;
 
 			updateFun = unitSelect;
-			unitSelect();
 		}
 		
 		private function unitSelect():void {
-			if(isNewMouseLoc) selector.loc = mouseLoc;
 			if(Input.mouseReleased) {
 				var selectedUnit:Unit = unitAt(mouseLoc, "friend");
 				if(selectedUnit != null) {
@@ -111,6 +109,7 @@ package com.monarch.strat {
 					(cell.graphic as Image).color = 0x00FF00;
 				}
 			}
+			selector.visible = true;
 			updateFun = moveStage;
 		}
 		
@@ -119,7 +118,21 @@ package com.monarch.strat {
 			if(isNewMouseLoc) {
 				if(displayPath != null) remove(displayPath);
 				displayPath = paths[mouseLoc];
+				selector.invalid = (displayPath == null);
 				if(displayPath != null) add(displayPath);
+			}
+			if(displayPath != null && Input.mouseReleased) {
+				for (var reachable:Object in paths) {
+					var cell:Cell = stage.cellAt(reachable as Loc);
+					if(cell != null) {
+						(cell.graphic as Image).color = 0xFFFFFF;
+					}
+				}
+				currentUnit.loc = displayPath.end;
+				remove(displayPath);
+				displayPath = null;
+				selector.visible = false;
+				unitSelectStart();
 			}
 		}
 	
