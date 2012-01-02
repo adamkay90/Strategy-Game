@@ -18,9 +18,6 @@ package com.monarch.strat {
 		private var display:List;
 		private var selector:Selector;
 
-		private var mouseLoc:Loc;
-		private var isNewMouseLoc:Boolean;
-		
 		public function Gameplay(tag:String){
 			_stage = new Stage(XML(new Assets.stages[tag]), this);
 
@@ -33,44 +30,40 @@ package com.monarch.strat {
 			selector.visible = false;
 			add(selector);
 
-			var vincent:UnitDefinition = new UnitDefinition(XML(new Assets.units["vincent"]));
+			var vincent:UnitDefinition = new UnitDefinition("vincent");
 			var vincentUnit:Unit = new Unit(vincent, Loc.at(9, 9));
 			units["friend"] = Vector.<Unit>([vincentUnit]);
-			add(vincentUnit);
 		}
 		
 		public function get stage():Stage { return _stage; }
 		
+		public function get mouseLoc():Loc { return _mouseLoc; }
+		private var _mouseLoc:Loc;
+		
+		public function get isNewMouseLoc():Boolean { return _isNewMouseLoc; }
+		private var _isNewMouseLoc:Boolean;
+		
 		override public function update():void {
+			var newMouseLoc:Loc = Loc.at(FP.world.mouseX / GridBlock.SIZE, FP.world.mouseY / GridBlock.SIZE);
+			_isNewMouseLoc = (newMouseLoc != mouseLoc);
+			_mouseLoc = newMouseLoc;
+			
+			if(updateFun != null) updateFun.call(this);
 			super.update();
-			var currentMouseLoc:Loc = Loc.at(FP.world.mouseX / GridBlock.SIZE, FP.world.mouseY / GridBlock.SIZE);
-			if(currentMouseLoc != mouseLoc) {
-				mouseLoc = currentMouseLoc;
-				isNewMouseLoc = true;
-				if(selector.visible) {
-					selector.loc = mouseLoc;
-				}
-			}
-			else isNewMouseLoc = false;
-			if(updateFun != null)
-				updateFun.call(this);
 		}
 		
+		// TODO: Implement team
 		private function unitAt(loc:Loc, team:String = null):Unit {
-			if(team != null) {
-				for each(var unit:Unit in units[team]) {
-					if(unit.loc == loc)
-						return unit;
-				}
+			for each(var unit:Unit in units[team]) {
+				if(unit.loc == loc)
+					return unit;
 			}
 			return null;
 		}
 		
 		private function unitSelectStart():void {
 			display.items[0].text.text = "Select a unit";
-
 			selector.visible = true;
-
 			updateFun = unitSelect;
 		}
 		

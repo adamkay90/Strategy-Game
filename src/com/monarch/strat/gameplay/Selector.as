@@ -15,8 +15,13 @@ package com.monarch.strat.gameplay {
 		public function get invalid():Boolean {
 			return image.color == 0xFF0000;
 		}
+		
 		public function set invalid(value:Boolean):void {
 			image.color = value? 0xFF0000 : 0xFFFFFF;
+		}
+		
+		override public function update():void {
+			loc = gameplay.mouseLoc;
 		}
 		
 	}

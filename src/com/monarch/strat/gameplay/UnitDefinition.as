@@ -1,4 +1,5 @@
 package com.monarch.strat.gameplay {
+	import com.monarch.strat.Assets;
 	
 	public class UnitDefinition {
 
@@ -9,7 +10,14 @@ package com.monarch.strat.gameplay {
 		private var _lastName:String;
 		private var _nickName:String = null;
 		
-		public function UnitDefinition(xml:XML) {
+		public function UnitDefinition(asset: *) {
+			var xml:XML;
+			if(asset is XML) {
+				xml = asset as XML;
+			}
+			if(asset is String) {
+				xml = XML(new Assets.units[asset as String]);
+			}
 			_stats = new Array;
 			for each(var stat:XML in xml["stat"])
 				_stats[stat.@type] = new Stat(stat);
