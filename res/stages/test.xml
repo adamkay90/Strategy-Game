@@ -2,7 +2,7 @@
 <stage background="grass">
 
 <define char="#" walkable="false" graphic="caution" />	
-<define char="!" walkable="true" cost="4" graphic="mud" />	
+<define char="!" walkable="true" cost="2" graphic="mud" />	
 
 <charmap>
 .....!..........................................
