@@ -1,49 +1,49 @@
 package com.monarch.strat.gameplay {
 	import com.monarch.strat.Assets;
 	
-	import Math;
-	
 	public class UnitDefinition {
 
-		private var _stats:Array;
-		private var _HP:int;
-		private var _movement:uint;
-		private var _level:int;
-		private var _exp:int;
-		
-		
-		private var modifiers:Vector.<Modifier> = new Vector.<Modifier>();
-		
-		private var _firstName:String;
-		private var _lastName:String;
-		private var _nickName:String = null;
+		// TODO: Make modifiers work
+		// private var modifiers:Vector.<Modifier> = new Vector.<Modifier>();
 		
 		public function UnitDefinition(asset: *) {
-			var xml:XML;
-			if(asset is XML) {
-				xml = asset as XML;
-			}
-			if(asset is String) {
-				xml = XML(new Assets.units[asset as String]);
-			}
-			_stats = new Array;
-			for each(var stat:XML in xml["stat"])
-				_stats[stat.@type] = new Stat(stat);
+			var xml:XML =
+				(asset is XML) ? asset as XML :
+				(asset is String) ? XML(new Assets.units[asset as String]) :
+				null;
 
-			_HP = stats["maxHP"];
-			_movement = stats["movement"];
+			for each(var stat:XML in xml["stat"])
+				_stats[StatType.called(stat.@type)] = new Stat(stat);
+
+			_HP = stats[StatType.MAXHP].value;
 			
-			_firstName = xml["name"].@first;
-			_lastName = xml["name"].@last;
-			
-			if("@nick" in xml["name"])
-				_nickName = xml["name"].@nick;
+			var nameXML:XMLList = xml["name"];
+			_firstName = nameXML.@first;
+			_lastName = nameXML.@last;
+			_nickName = ("@nick" in nameXML) ? nameXML.@nick : firstName;
 		}
 		
-		public function get stats():Array {
-			return _stats;
-		}
+		public function get stats():Vector.<Stat> { return _stats; }
+		private var _stats:Vector.<Stat> = new Vector.<Stat>(StatType.SIZE);
 				
+		public function get HP():int { return _HP; }
+		private var _HP:int;
+		
+		public function get exp():uint { return _exp; }
+		private var _exp:uint;
+		
+		public function get level():uint { return _level; }
+		private var _level:int;
+
+		public function get firstName():String { return _firstName; }
+		private var _firstName:String;
+
+		public function get lastName():String { return _lastName; }
+		private var _lastName:String;
+		
+		public function get nickName():String { return _nickName; }
+		private var _nickName:String;
+		
 		public function unmodifiedLevelUp():void {
 			++_level;
 			for each(var stat:Stat in _stats) {
@@ -55,22 +55,6 @@ package com.monarch.strat.gameplay {
 			}
 		}
 			
-		public function get HP():int {
-			return _HP;
-		}
-		
-		public function get firstName():String {
-			return _firstName;
-		}
-		
-		public function get lastName():String {
-			return _lastName;
-		}
-		
-		public function get nickName():String {
-			return _nickName == null ? _firstName : _nickName;
-		}
-		
 	}
 	
 }

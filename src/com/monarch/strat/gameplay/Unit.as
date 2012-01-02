@@ -16,14 +16,9 @@ package com.monarch.strat.gameplay {
 		
 		public function get definition():UnitDefinition { return _definition; }
 		
-		public function get stats():Array { return definition.stats; }
-		public function stat(type:String):Stat {
-			return stats[type] as Stat;
-		}
-		
 		public function get paths():Dictionary {
 			if(stage == null) return null;
-			return stage.findPaths(loc, stat("movement").value);
+			return stage.findPaths(loc, definition.stats[StatType.MOVEMENT].value);
 		}
 
 	}
