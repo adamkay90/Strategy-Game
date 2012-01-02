@@ -3,6 +3,7 @@ package com.monarch.strat.gameplay {
 	/**
 	 * Represents a character's stat.
 	 * @author Forrest Jacobs
+	 * @author Adam Kay
 	 */
 	public class Stat {
 		
@@ -12,39 +13,32 @@ package com.monarch.strat.gameplay {
 		 */
 		public function Stat(xml:XML) {
 			_pureValue = xml.@start;
+			_baseValue = xml.@start;
+			_modifiedValue = xml.@start;
+			if (xml.@levelUp != 0) {
+				_growthValue = xml.@levelUp;
+			}
 		}
 		
-		/** The stat's numberical value without modifiers. */
+		/** Current value without modifiers. */
 		public function get pureValue():int { return _pureValue; }
+		public function set pureValue(value:int):void { _pureValue = value; }
 		private var _pureValue:int;
 
-		/** List of modifiers currently affecting the stat. */
-		public function get modifiers():Vector.<Modifier> { return _modifiers; }
-		private var _modifiers:Vector.<Modifier> = new Vector.<Modifier>;
-
-		/** Value of all the modifiers added together. */
-		public function get modifierValue():int {
-			var total:int = 0;
-			for each (var modifier:Modifier in modifiers) {
-				total += modifier.value;
-			}
-			return total;
-		}
-
-		/** Current value of the stat. */
-		public function get value(): int {
-			return pureValue + modifierValue;
-		}
+		/** Value at first level. */
+		public function get baseValue():int { return _baseValue; }
+		public function set baseValue(value:int):void { _baseValue = value; }
+		private var _baseValue:int;
 		
-		/** Call between turns to remove expired modifiers from the list. */
-		public function step():void {
-			for each (var modifier:Modifier in modifiers) {
-				modifier.step();
-			}
-			_modifiers = modifiers.filter(function(e: Modifier, i:uint, a:Vector.<Modifier>):Boolean {
-				return e.isAlive();
-			});
-		}
-		
+		/** Current value with modifiers. */
+		public function get value():int { return _modifiedValue; }
+		public function set value(value:int):void { _modifiedValue = value;  }
+		private var _modifiedValue:int;
+
+		/** Growth rate */
+		public function get growthValue():int { return _growthValue; }
+		public function set growthValue(value:int):void { _growthValue = value; }
+		private var _growthValue:int = 0;
+
 	}
 }

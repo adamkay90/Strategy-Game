@@ -17,12 +17,14 @@ package com.monarch.strat.gameplay {
 		public function get definition():UnitDefinition { return _definition; }
 		
 		public function get stats():Array { return definition.stats; }
-		public function get speed():Stat { return stats["speed"] as Stat; }
+		public function stat(type:String):Stat {
+			return stats[type] as Stat;
+		}
 		
 		public function get paths():Dictionary {
 			if(stage == null) return null;
-			return stage.findPaths(loc, speed.value);
+			return stage.findPaths(loc, stat("movement").value);
 		}
-		
+
 	}
 }

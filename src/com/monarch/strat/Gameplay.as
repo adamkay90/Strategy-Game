@@ -33,6 +33,8 @@ package com.monarch.strat {
 			var vincent:UnitDefinition = new UnitDefinition("vincent");
 			var vincentUnit:Unit = new Unit(vincent, Loc.at(9, 9));
 			units["friend"] = Vector.<Unit>([vincentUnit]);
+
+			add(vincentUnit);
 		}
 		
 		public function get stage():Stage { return _stage; }
