@@ -3,8 +3,7 @@
 
 <define char="." graphic="grass" />
 <define char="#" walkable="false" graphic="caution" />	
-<define char="!" cost="4" graphic="mud" />	
-
+<define char="!" cost="2" graphic="mud" />	
 <charmap>
 .....!..........................................
 .....!..........................................
