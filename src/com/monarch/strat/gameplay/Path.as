@@ -17,31 +17,23 @@ package com.monarch.strat.gameplay {
 		]);
 		
 		
-		public function Path(start:Loc, path:Vector.<Loc>){
+		public function Path(path:Vector.<Loc>){
 			super();
-			this.layer = Layers.PATH;
-
-			_start = start;
 			_path = path;
+			this.layer = Layers.PATH;
 			
-			add(start, path[0]);
-			add(path[0], start);
 			for (var i:uint = 0; i < path.length; ++i){
-				if (i < path.length - 1)
-					add(path[i], path[i + 1]);
-				if (i != 0)
-					add(path[i], path[i - 1]);
+				if (i < path.length - 1) add(path[i], path[i + 1]);
+				if (i != 0) add(path[i], path[i - 1]);
 			}
 		}
 		
-		public function get start(): Loc { return _start; }
-		private var _start: Loc;
-
 		public function get path(): Vector.<Loc> { return _path; }
 		private var _path: Vector.<Loc>;
 		
 		public function get length(): uint { return path.length; }
 
+		public function get start(): Loc { return path[0]; }
 		public function get end(): Loc { return path[length - 1]; }
 		
 		private function add(start:Loc, end:Loc):void {

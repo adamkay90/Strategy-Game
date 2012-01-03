@@ -20,6 +20,11 @@ package com.monarch.strat.gameplay {
 			layer = Layers.CELL;
 			graphic = new Image(def.graphic);
 		}
+		
+		/** Sorts an array of Cells in reverse order. Used with Array.sort */
+		public static function SortReverse(a: Cell, b: Cell):uint {
+			return b.distance - a.distance;
+		}
 
 		/** The Cell type. */
 		public function get def(): CellDef { return _def; }

@@ -54,11 +54,11 @@ package com.monarch.strat.gameplay {
 			return index == -1 ? null : cellMap[index];
 		}
 		
-		public function neighborsFor(cell:Cell):Vector.<Cell> {
+		public function walkableNeighborsFor(cell:Cell):Vector.<Cell> {
 			var result:Vector.<Cell> = new Vector.<Cell>;
 			for each (var neighbor:Loc in cell.loc.neighbors){
 				var nCell:Cell = cellAt(neighbor);
-				if (nCell != null)
+				if (nCell != null && nCell.def.walkable)
 					result.push(nCell);
 			}
 			return result;
@@ -72,40 +72,25 @@ package com.monarch.strat.gameplay {
 			var visited:Vector.<Cell> = new Vector.<Cell>;
 			
 			while (unvisited.length != 0){
-				// Visit the closest unvisited cell.
-				var current:Cell = unvisited[0];
-				for (var i:uint = 1; i < unvisited.length; ++i){
-					var cell:Cell = unvisited[i];
-					if (cell.distance < current.distance)
-						current = cell;
-				}
-				unvisited.splice(unvisited.indexOf(current), 1);
+				var current:Cell = unvisited.pop();
 				visited.push(current);
-				
-				// Add its unvisited neighbors to the unvisited cells.
-				var neighborDists:uint = current.distance + current.def.cost;
-				if (neighborDists <= distance){
-					for each (var neighbor:Cell in neighborsFor(current)){
-						if (neighbor.def.walkable &&
-								neighborDists < neighbor.distance &&
-								visited.indexOf(neighbor) == -1){
-							neighbor.visit(current, neighborDists);
-							unvisited.push(neighbor);
-						}
+				for each (var neighbor:Cell in walkableNeighborsFor(current)){
+					var neighborDist:uint = current.distance + neighbor.def.cost;
+					if (neighborDist <= distance && neighborDist < neighbor.distance) {
+						neighbor.visit(current, neighborDist);
+						unvisited.push(neighbor);
 					}
 				}
+				unvisited.sort(Cell.SortReverse);
 			}
 			var result:Dictionary = new Dictionary;
 			for each (var dest:Cell in visited){
-				if(dest != startCell) {
-					var path:Vector.<Loc> = new Vector.<Loc>;
-					for (var cur:Cell = dest; cur != startCell; cur = cur.previous)
-						path.unshift(cur.loc);
-					result[dest.loc] = new Path(start, path);
-				}
+				var path:Vector.<Loc> = new Vector.<Loc>;
+				for (var cur:Cell = dest; cur != null; cur = cur.previous)
+					path.unshift(cur.loc);
+				result[dest.loc] = new Path(path);
 			}
-			for each (var c:Cell in visited)
-				c.reset();
+			for each (var c:Cell in visited) c.reset();
 			return result;
 		}
 	
