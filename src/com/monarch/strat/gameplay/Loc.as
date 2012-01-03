@@ -20,9 +20,6 @@ package com.monarch.strat.gameplay {
 			_col = col;
 		}
 		
-		/** Contains all the already constructed Locs. Used by Loc.at(col, row). */
-		private static var sink:Vector.<Vector.<Loc>> = new Vector.<Vector.<Loc>>;
-		
 		/**
 		 * Creates or reuses a Loc at the given row and column
 		 * @param col Column.
@@ -30,18 +27,15 @@ package com.monarch.strat.gameplay {
 		 * @return A Loc at the given row and column.
 		 */
 		public static function at(col:uint, row:uint):Loc {
-			if (sink.length <= row)
-				sink.length = row + 1;
-			if (sink[row] == null)
-				sink[row] = new Vector.<Loc>;
+			if (sink.length <= row) sink.length = row + 1;
+			if (sink[row] == null) sink[row] = new Vector.<Loc>;
 			var sinkRow:Vector.<Loc> = sink[row];
 			
-			if (sinkRow.length <= col)
-				sinkRow.length = col + 1;
-			if (sinkRow[col] == null)
-				sinkRow[col] = new Loc(col, row, new Private);
+			if (sinkRow.length <= col) sinkRow.length = col + 1;
+			if (sinkRow[col] == null) sinkRow[col] = new Loc(col, row, new Private);
 			return sinkRow[col];
 		}
+		private static var sink:Vector.<Vector.<Loc>> = new Vector.<Vector.<Loc>>;
 		
 		/** The row. */
 		public function get row():uint { return _row; }

@@ -1,12 +1,12 @@
-package com.monarch.strat.gameplay {
+package com.monarch.strat.gameplay.unit {
 	import com.monarch.strat.Assets;
 	
-	public class UnitDefinition {
+	public class UnitDef {
 
 		// TODO: Make modifiers work
 		// private var modifiers:Vector.<Modifier> = new Vector.<Modifier>();
 		
-		public function UnitDefinition(asset: *) {
+		public function UnitDef(asset: *) {
 			var xml:XML =
 				(asset is XML) ? asset as XML :
 				(asset is String) ? XML(new Assets.units[asset as String]) :

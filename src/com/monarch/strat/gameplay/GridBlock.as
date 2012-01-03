@@ -12,17 +12,9 @@ package com.monarch.strat.gameplay {
 			_loc = loc;
 		}
 		
-		public function get gameplay():Gameplay {
-			return world as Gameplay;
-		}
-		
-		public function get stage():Stage {
-			return gameplay.stage;
-		}
-		
-		public function get image():Image {
-			return graphic as Image;
-		}
+		public function get gameplay():Gameplay { return world as Gameplay; }
+		public function get stage():Stage { return gameplay.stage; }
+		public function get image():Image { return graphic as Image; }
 		
 		public function get loc():Loc {return _loc;}
 		public function set loc(value:Loc):void {

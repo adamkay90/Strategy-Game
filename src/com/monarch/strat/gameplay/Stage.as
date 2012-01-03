@@ -4,59 +4,49 @@ package com.monarch.strat.gameplay {
 	import net.flashpunk.World;
 	
 	/**
-	 * ...
+	 * Represents a stage. 
 	 * @author Forrest Jacobs
 	 */
 	public class Stage {
 		
+		/** Grid of cells that create the stage. */
 		private var cellMap:Vector.<Cell>;
 		
-		public function Stage(xml:XML, world: World){
-			var backdrop:Class = Assets.backgrounds[xml.@background];
-			var defaultDefinition:CellDefinition = new CellDefinition(
-				CellDefinition.DEFAULT_COST,
-				CellDefinition.DEFAULT_WALKABLE,
-				backdrop);
-
-			var definitions:Object = new Object;
-			for each (var xmlDef:XML in xml["define"]){
-				definitions[xmlDef.@char] = CellDefinition.fromXML(xmlDef, backdrop);
-			}
+		public function Stage(asset: *, world: World){
+			var xml:XML =
+				(asset is XML) ? asset as XML :
+				(asset is String) ? XML(new Assets.stages[asset as String]) :
+				null;
+			
+			var defs:Object = new Object;
+			for each (var xmlDef:XML in xml["define"])
+				defs[xmlDef.@char] = new CellDef(xmlDef);
 			
 			var charMap:Array = xml.child("charmap").toString().split("\n");
 			_height = charMap.length;
-			_width = (charMap[0] as String).length;
+			_width = (charMap[0] as String).length - 1;
 			
 			cellMap = new Vector.<Cell>(width * height);
 			for (var y:uint = 0; y < height; ++y){
 				for (var x:uint = 0; x < width; ++x){
 					var loc:Loc = Loc.at(x, y);
-					var definition:CellDefinition = definitions[(charMap[y] as String).charAt(x)];
-					if(definition == null)
-						definition = defaultDefinition;
-					var cell:Cell = new Cell(loc, definition);
+					var def:CellDef = defs[(charMap[y] as String).charAt(x)];
+					var cell:Cell = new Cell(loc, def);
 					world.add(cell);
 					cellMap[index(loc)] = cell;
 				}
 			}
 		}
 		
+		public function get width():uint { return _width; }
 		private var _width:uint;
 		
-		public function get width():uint {
-			return _width;
-		}
-		
+		public function get height():uint { return _height; }
 		private var _height:uint;
 		
-		public function get height():uint {
-			return _height;
-		}
-		
 		private function index(loc:Loc):int {
-			if (loc.col >= width || loc.row >= height)
-				return -1;
-			return loc.row * width + loc.col;
+			return (loc.col < width && loc.row < height)?
+				loc.row * width + loc.col : -1;
 		}
 		
 		public function cellAt(loc:Loc):Cell {
@@ -82,18 +72,23 @@ package com.monarch.strat.gameplay {
 			var visited:Vector.<Cell> = new Vector.<Cell>;
 			
 			while (unvisited.length != 0){
+				// Visit the closest unvisited cell.
 				var current:Cell = unvisited[0];
 				for (var i:uint = 1; i < unvisited.length; ++i){
 					var cell:Cell = unvisited[i];
 					if (cell.distance < current.distance)
 						current = cell;
 				}
-				var neighborDists:uint = current.distance + current.cost;
 				unvisited.splice(unvisited.indexOf(current), 1);
 				visited.push(current);
+				
+				// Add its unvisited neighbors to the unvisited cells.
+				var neighborDists:uint = current.distance + current.def.cost;
 				if (neighborDists <= distance){
 					for each (var neighbor:Cell in neighborsFor(current)){
-						if (neighbor.walkable && neighborDists < neighbor.distance && visited.indexOf(neighbor) == -1){
+						if (neighbor.def.walkable &&
+								neighborDists < neighbor.distance &&
+								visited.indexOf(neighbor) == -1){
 							neighbor.visit(current, neighborDists);
 							unvisited.push(neighbor);
 						}
@@ -102,10 +97,12 @@ package com.monarch.strat.gameplay {
 			}
 			var result:Dictionary = new Dictionary;
 			for each (var dest:Cell in visited){
-				var path:Vector.<Loc> = new Vector.<Loc>;
-				for (var cur:Cell = dest; cur != startCell; cur = cur.previous)
-					path.unshift(cur.loc);
-				result[dest.loc] = new Path(start, path);
+				if(dest != startCell) {
+					var path:Vector.<Loc> = new Vector.<Loc>;
+					for (var cur:Cell = dest; cur != startCell; cur = cur.previous)
+						path.unshift(cur.loc);
+					result[dest.loc] = new Path(start, path);
+				}
 			}
 			for each (var c:Cell in visited)
 				c.reset();
