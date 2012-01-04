@@ -8,21 +8,23 @@ package com.monarch.strat.gameplay {
 		public static const SIZE:uint = 24;
 		
 		public function GridBlock(loc:Loc) {
-			super(loc.x, loc.y);
-			_loc = loc;
+			super();
+			this.loc = loc;
 		}
 		
 		public function get gameplay():Gameplay { return world as Gameplay; }
 		public function get stage():Stage { return gameplay.stage; }
 		public function get image():Image { return graphic as Image; }
 		
-		public function get loc():Loc {return _loc;}
-		public function set loc(value:Loc):void {
+		public function get loc(): Loc { return _loc; }
+		public function set loc(value: Loc): void {
 			_loc = value;
-			x = value.x;
-			y = value.y;
+			if(loc != null) {
+				x = loc.x;
+				y = loc.y;
+			}
 		}
-		private var _loc:Loc;
+		private var _loc: Loc;
 		
 	}
 }

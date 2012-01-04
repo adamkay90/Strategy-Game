@@ -68,7 +68,8 @@ package com.monarch.strat {
 		// TODO: Implement team
 		public function unitAt(loc:Loc, team:String = null):Unit {
 			for each(var unit:Unit in units[team]) {
-				if(unit.loc == loc)
+//				trace(unit.loc.x, unit.loc.y);
+				if(loc == unit.loc)
 					return unit;
 			}
 			return null;

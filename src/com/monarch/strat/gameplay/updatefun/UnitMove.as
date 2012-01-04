@@ -16,6 +16,7 @@ package com.monarch.strat.gameplay.updatefun {
 		private var unit: Unit;
 		private var paths: Dictionary;
 		private var displayPath: Path;
+		private var alreadySelected: Boolean;
 		
 		public function UnitMove(unit: Unit) {
 			this.unit = unit;
@@ -33,28 +34,29 @@ package com.monarch.strat.gameplay.updatefun {
 		}
 		
 		public override function update(): void {
-			if(gp.isNewMouseLoc) {
-				if(displayPath != null) gp.remove(displayPath);
-				displayPath = paths[gp.mouseLoc];
-				gp.selector.invalid = (displayPath == null);
-				if(displayPath != null) gp.add(displayPath);
-			}
-			if(displayPath != null && Input.mouseReleased) {
-				unit.loc = displayPath.end;
-				gp.updateFun = new UnitSelect();
-			}
-		}
-		
-		public override function destroy(): void {
-			for (var reachable:Object in paths) {
-				var cell:Cell = gp.stage.cellAt(reachable as Loc);
-				if(cell != null) {
-					(cell.graphic as Image).color = 0xFFFFFF;
+			if(!alreadySelected) {
+				if(gp.isNewMouseLoc) {
+					if(displayPath != null) gp.remove(displayPath);
+					displayPath = paths[gp.mouseLoc];
+					gp.selector.invalid = (displayPath == null);
+					if(displayPath != null) gp.add(displayPath);
+				}
+				if(displayPath != null && Input.mouseReleased) {
+					unit.move(displayPath);
+					alreadySelected = true;
+					for (var reachable:Object in paths) {
+						var cell:Cell = gp.stage.cellAt(reachable as Loc);
+						if(cell != null) {
+							(cell.graphic as Image).color = 0xFFFFFF;
+						}
+					}
+					gp.remove(displayPath);
+					displayPath = null;
+					gp.selector.visible = false;
 				}
 			}
-			gp.remove(displayPath);
-			displayPath = null;
-			gp.selector.visible = false;
+			else if(unit.loc != null)
+				gp.updateFun = new UnitSelect();
 		}
 		
 	}
