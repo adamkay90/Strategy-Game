@@ -34,5 +34,10 @@
 ................................................
 ................................................
 </charmap>
-	
+
+<unit name="vincent" col= "9" row="9" />
+<unit name="sigurd"  col="10" row="9" />
+
+<unit name="genericFoe" col="9" row="10" />
+
 </stage>

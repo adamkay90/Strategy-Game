@@ -1,4 +1,5 @@
 package com.monarch.strat.gameplay.updatefun {
+	import com.monarch.strat.gameplay.unit.Team;
 	import com.monarch.strat.gameplay.Unit;
 	import net.flashpunk.utils.Input;
 	import com.monarch.strat.gameplay.UpdateFun;
@@ -15,7 +16,7 @@ package com.monarch.strat.gameplay.updatefun {
 		
 		public override function update():void {
 			if(Input.mouseReleased) {
-				var selected:Unit = gp.unitAt(gp.mouseLoc, "friend");
+				var selected:Unit = gp.stage.unitAt(gp.mouseLoc, Team.FRIEND);
 				if(selected != null) {
 					gp.selector.visible = false;
 					gp.updateFun = new UnitMenu(selected);

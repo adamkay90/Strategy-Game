@@ -1,18 +1,15 @@
 package com.monarch.strat {
 	import com.monarch.strat.gameplay.updatefun.UnitSelect;
-	import com.monarch.strat.gameplay.unit.UnitDef;
 	import com.monarch.strat.ui.*;
 	import com.monarch.strat.gameplay.*;
 	import net.flashpunk.*;
 	
 	public class Gameplay extends World {
 		
-		private var units:Object = new Object;
-		
 		private var display:List;
 
 		public function Gameplay(tag:String){
-			_stage = new Stage(XML(new Assets.stages[tag]), this);
+			_stage = new Stage(tag, this);
 
 			display = new List(Vector.<Item>([new Item("")]), 800);
 			display.x = 0;
@@ -23,12 +20,6 @@ package com.monarch.strat {
 			selector.visible = false;
 			add(selector);
 
-			var vincent:UnitDef = new UnitDef("vincent");
-			var vincentUnit:Unit = new Unit(vincent, Loc.at(9, 9));
-			units["friend"] = Vector.<Unit>([vincentUnit]);
-
-			add(vincentUnit);
-			
 			updateFun = new UnitSelect();
 		}
 		
@@ -57,7 +48,11 @@ package com.monarch.strat {
 		public function set status(value:String):void { display.items[0].text = value; }
 
 		override public function update():void {
-			var newMouseLoc:Loc = Loc.at(FP.world.mouseX / GridBlock.SIZE, FP.world.mouseY / GridBlock.SIZE);
+			var newMouseLoc:Loc = Loc.at(
+				FP.world.mouseX / GridBlock.SIZE,
+				FP.world.mouseY / GridBlock.SIZE);
+			if(!stage.inBounds(newMouseLoc))
+				newMouseLoc = null;
 			_isNewMouseLoc = (newMouseLoc != mouseLoc);
 			_mouseLoc = newMouseLoc;
 			
@@ -65,16 +60,6 @@ package com.monarch.strat {
 			super.update();
 		}
 		
-		// TODO: Implement team
-		public function unitAt(loc:Loc, team:String = null):Unit {
-			for each(var unit:Unit in units[team]) {
-//				trace(unit.loc.x, unit.loc.y);
-				if(loc == unit.loc)
-					return unit;
-			}
-			return null;
-		}
-	
 	}
 
 }

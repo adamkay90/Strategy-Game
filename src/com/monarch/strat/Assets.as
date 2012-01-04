@@ -74,6 +74,14 @@ package com.monarch.strat {
 			west: DIRECTIONS_WEST
 		};
 
+		/***** embed items *****/
+		[Embed(source="../../../../res/items/weapons.xml", mimeType="application/octet-stream")]
+		private static const ITEMS_WEAPONS:Class;
+
+		public static const items:Object = {
+			weapons: ITEMS_WEAPONS
+		};
+
 		/***** embed stages *****/
 		[Embed(source="../../../../res/stages/test.xml", mimeType="application/octet-stream")]
 		private static const STAGES_TEST:Class;
@@ -83,10 +91,18 @@ package com.monarch.strat {
 		};
 
 		/***** embed units *****/
+		[Embed(source="../../../../res/units/genericFoe.xml", mimeType="application/octet-stream")]
+		private static const UNITS_GENERICFOE:Class;
+
+		[Embed(source="../../../../res/units/sigurd.xml", mimeType="application/octet-stream")]
+		private static const UNITS_SIGURD:Class;
+
 		[Embed(source="../../../../res/units/vincent.xml", mimeType="application/octet-stream")]
 		private static const UNITS_VINCENT:Class;
 
 		public static const units:Object = {
+			genericFoe: UNITS_GENERICFOE,
+			sigurd: UNITS_SIGURD,
 			vincent: UNITS_VINCENT
 		};
 

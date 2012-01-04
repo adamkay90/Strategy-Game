@@ -1,8 +1,8 @@
 import os
 
 # paths used
-root = '/Users/forrest/Documents/fdt workspace/strat/res'
-assetPath = '/Users/forrest/Documents/fdt workspace/strat/src/com/monarch/strat/Assets.as'
+root = '.'
+assetPath = '../src/com/monarch/strat/Assets.as'
 relRoot = '../../../../res'
 
 # open Assets.as for writing, and start the class

@@ -11,7 +11,9 @@ package com.monarch.strat.gameplay.unit {
 				(asset is XML) ? asset as XML :
 				(asset is String) ? XML(new Assets.units[asset as String]) :
 				null;
-
+			
+			trace(asset);
+			
 			for each(var stat:XML in xml["stat"])
 				_stats[StatType.called(stat.@type)] = new Stat(stat);
 
@@ -21,6 +23,8 @@ package com.monarch.strat.gameplay.unit {
 			_firstName = nameXML.@first;
 			_lastName = nameXML.@last;
 			_nickName = ("@nick" in nameXML) ? nameXML.@nick : firstName;
+
+			_team = Team.called(xml.@team);
 		}
 		
 		public function get stats():Vector.<Stat> { return _stats; }
@@ -34,6 +38,9 @@ package com.monarch.strat.gameplay.unit {
 		
 		public function get level():uint { return _level; }
 		private var _level:int;
+		
+		public function get team():uint { return _team; }
+		private var _team:uint;
 
 		public function get firstName():String { return _firstName; }
 		private var _firstName:String;
