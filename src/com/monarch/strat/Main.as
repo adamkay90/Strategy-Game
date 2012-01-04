@@ -5,6 +5,7 @@ package com.monarch.strat {
 	/**
 	 * Mediates between views of the game.
 	 * @author Forrest Jacobs
+	 * @author Adam Kay
 	 */
 	public class Main extends Engine {
 
