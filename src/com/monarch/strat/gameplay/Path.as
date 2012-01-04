@@ -9,9 +9,6 @@ package com.monarch.strat.gameplay {
 	 */
 	public class Path extends Entity {
 		
-		public static const PATH_COLOR:uint = 0x33FF00;
-		public static const PATH_OUTLINE:uint = 0xFFFFFF;
-		
 		public static const GRAPHICS:Vector.<Class> = Vector.<Class>([
 			Assets.directions["south"],
 			Assets.directions["west"],
@@ -19,33 +16,25 @@ package com.monarch.strat.gameplay {
 			Assets.directions["east"]
 		]);
 		
-		private var _start: Loc;
+		
+		public function Path(path:Vector.<Loc>){
+			super();
+			_path = path;
+			this.layer = Layers.PATH;
+			
+			for (var i:uint = 0; i < path.length; ++i){
+				if (i < path.length - 1) add(path[i], path[i + 1]);
+				if (i != 0) add(path[i], path[i - 1]);
+			}
+		}
+		
+		public function get path(): Vector.<Loc> { return _path; }
 		private var _path: Vector.<Loc>;
 		
-		public function Path(start:Loc, path:Vector.<Loc>){
-			super();
-			this.layer = Layers.PATH;
+		public function get length(): uint { return path.length; }
 
-			_start = start;
-			_path = path;
-			
-			if (path.length > 0){
-				add(start, path[0]);
-				add(path[0], start);
-			}
-			for (var i:uint = 0; i < path.length; ++i){
-				if (i < path.length - 1)
-					add(path[i], path[i + 1]);
-				if (i != 0)
-					add(path[i], path[i - 1]);
-			}
-		}
-		
-		public function get start(): Loc { return _start; }
-		public function get path(): Vector.<Loc> { return _path; }
-		public function get end(): Loc {
-			return path.length > 0 ? path[path.length - 1] : start;
-		}
+		public function get start(): Loc { return path[0]; }
+		public function get end(): Loc { return path[length - 1]; }
 		
 		private function add(start:Loc, end:Loc):void {
 			var direction:uint = start.directionTo(end);

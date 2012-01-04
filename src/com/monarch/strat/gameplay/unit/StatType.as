@@ -1,4 +1,4 @@
-package com.monarch.strat.gameplay {
+package com.monarch.strat.gameplay.unit {
 	/**
 	 * @author forrest
 	 */

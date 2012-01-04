@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<stage background="grass">
+<stage>
 
+<define char="." graphic="grass" />
 <define char="#" walkable="false" graphic="caution" />	
-<define char="!" walkable="true" cost="2" graphic="mud" />	
-
+<define char="!" cost="2" graphic="mud" />	
 <charmap>
 .....!..........................................
 .....!..........................................

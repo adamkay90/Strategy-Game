@@ -1,4 +1,4 @@
-package com.monarch.strat.gameplay {
+package com.monarch.strat.gameplay.unit {
 	
 	/**
 	 * Represents a modifier to a Stat

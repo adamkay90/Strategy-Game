@@ -1,42 +1,51 @@
 package com.monarch.strat.gameplay {
 	import net.flashpunk.graphics.Image;
 
+	/**
+	 * Represents a tile on the stage.
+	 * @author Forrest Jacobs
+	 */
 	public class Cell extends GridBlock {
-		private var definition : CellDefinition;
-		private var _distance : uint = uint.MAX_VALUE;
-		private var _previous : Cell = null;
-
-		public function Cell(loc : Loc, definition : CellDefinition = null) {
+		
+		/**
+		 * Constructor.
+		 * @param loc The Cell's location.
+		 * @param definition The Cell type.
+		 */
+		public function Cell(loc: Loc, def: CellDef) {
 			super(loc);
+			_def = def;
+			reset();
 
 			layer = Layers.CELL;
-			graphic = new Image(definition.graphic);
-
-			this.definition = definition;
+			graphic = new Image(def.graphic);
+		}
+		
+		/** Sorts an array of Cells in reverse order. Used with Array.sort */
+		public static function SortReverse(a: Cell, b: Cell):uint {
+			return b.distance - a.distance;
 		}
 
-		public function get cost() : uint {
-			return definition.cost;
-		}
+		/** The Cell type. */
+		public function get def(): CellDef { return _def; }
+		private var _def: CellDef;
 
-		public function get walkable() : Boolean {
-			return definition.walkable;
-		}
+		/** Distance to the start Cell. Used for pathfinding. */
+		internal function get distance(): uint { return _distance; }
+		private var _distance: uint;
 
-		public function get distance() : uint {
-			return _distance;
-		}
+		/** Previous Cell on the path. Used for pathfinding. */
+		internal function get previous(): Cell { return _previous; }
+		private var _previous: Cell;
 
-		public function get previous() : Cell {
-			return _previous;
-		}
-
-		public function visit(prev : Cell, dist : uint) : void {
+		/** Sets the distance and previous Cell. Used for pathfinding. */
+		internal function visit(prev: Cell, dist: uint): void {
 			_distance = dist;
 			_previous = prev;
 		}
 
-		public function reset() : void {
+		/** Resets the distance and previous Cell. Used for pathfinding. */
+		public function reset(): void {
 			_distance = uint.MAX_VALUE;
 			_previous = null;
 		}

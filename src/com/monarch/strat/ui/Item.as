@@ -27,7 +27,8 @@ package com.monarch.strat.ui {
 		
 		public function get isSelectable():Boolean { return action != null; }
 		
-		public function get text():Text { return textGraphic; }
+		public function get text():String { return textGraphic.text; }
+		public function set text(value: String):void { textGraphic.text = value; }
 		
 		public override function update():void {
 			this.minWidth = textGraphic.textWidth + 2 * X_PADDING;

@@ -6,6 +6,8 @@ package com.monarch.strat.gameplay {
 	 */
 	public class Loc {
 		
+		private static const MAX:uint = 500;
+		
 		/**
 		 * The constructor for Loc.
 		 * @param col Column.
@@ -14,14 +16,10 @@ package com.monarch.strat.gameplay {
 		 * @private
 		 */
 		public function Loc(col:uint, row:uint, access:Private){
-			if (access == null)
-				throw new Error("FACTORY_EXCEPTION");
+			if (access == null) throw new Error("FACTORY_EXCEPTION");
 			_row = row;
 			_col = col;
 		}
-		
-		/** Contains all the already constructed Locs. Used by Loc.at(col, row). */
-		private static var sink:Vector.<Vector.<Loc>> = new Vector.<Vector.<Loc>>;
 		
 		/**
 		 * Creates or reuses a Loc at the given row and column
@@ -30,19 +28,18 @@ package com.monarch.strat.gameplay {
 		 * @return A Loc at the given row and column.
 		 */
 		public static function at(col:uint, row:uint):Loc {
-			if (sink.length <= row)
-				sink.length = row + 1;
-			if (sink[row] == null)
-				sink[row] = new Vector.<Loc>;
-			var sinkRow:Vector.<Loc> = sink[row];
+			if (row >= MAX || col >= MAX) return null;
 			
-			if (sinkRow.length <= col)
-				sinkRow.length = col + 1;
-			if (sinkRow[col] == null)
-				sinkRow[col] = new Loc(col, row, new Private);
-			return sinkRow[col];
+			var sinkRow:Vector.<Loc> = sink[row] == null?
+				sink[row] = new Vector.<Loc>(MAX) :
+				sink[row];
+			
+			return sinkRow[col] == null?
+				sinkRow[col] = new Loc(col, row, new Private) :
+				sinkRow[col];
 		}
-		
+		private static var sink:Vector.<Vector.<Loc>> = new Vector.<Vector.<Loc>>(MAX);
+
 		/** The row. */
 		public function get row():uint { return _row; }
 		private var _row:uint;
