@@ -1,4 +1,5 @@
 package com.monarch.strat.gameplay {
+	import com.monarch.strat.gameplay.unit.Team;
 	import com.monarch.strat.Assets;
 	import flash.utils.*;
 	import net.flashpunk.World;
@@ -14,8 +15,8 @@ package com.monarch.strat.gameplay {
 		
 		public function Stage(asset: *, world: World){
 			var xml:XML =
-				(asset is XML) ? asset as XML :
-				(asset is String) ? XML(new Assets.stages[asset as String]) :
+				asset is XML? asset as XML :
+				asset is String? XML(new Assets.stages[asset as String]) :
 				null;
 			
 			var defs:Object = new Object;
@@ -36,6 +37,14 @@ package com.monarch.strat.gameplay {
 					cellMap[index(loc)] = cell;
 				}
 			}
+			
+			_units = new Vector.<Unit>;
+			for each (var xmlUnit:XML in xml["unit"]) {
+				var unit:Unit = new Unit(xmlUnit.@name.toString(),
+					Loc.at(xmlUnit.@col, xmlUnit.@row));
+				units.push(unit);
+				world.add(unit);
+			}
 		}
 		
 		public function get width():uint { return _width; }
@@ -44,9 +53,33 @@ package com.monarch.strat.gameplay {
 		public function get height():uint { return _height; }
 		private var _height:uint;
 		
+		public function get units():Vector.<Unit> { return _units; }
+		private var _units:Vector.<Unit>;
+
+		public function unitAt(loc:Loc, team:int = Team.NONE):Unit {
+			for each(var unit:Unit in units) {
+				if(loc == unit.loc && (team == Team.NONE || unit.def.team == team))
+					return unit;
+			}
+			return null;
+		}
+		
+		public function unitsOnTeam(team: int): Vector.<Unit> {
+			var result: Vector.<Unit> = new Vector.<Unit>;
+			for each(var unit:Unit in units) {
+				if(unit.def.team == team)
+					result.push(unit);
+			}
+			return result;
+		}
+		
 		private function index(loc:Loc):int {
 			return (loc.col < width && loc.row < height)?
 				loc.row * width + loc.col : -1;
+		}
+		
+		public function inBounds(loc:Loc):Boolean {
+			return index(loc) != -1;
 		}
 		
 		public function cellAt(loc:Loc):Cell {
@@ -54,17 +87,21 @@ package com.monarch.strat.gameplay {
 			return index == -1 ? null : cellMap[index];
 		}
 		
-		public function walkableNeighborsFor(cell:Cell):Vector.<Cell> {
+		public function walkableNeighborsFor(cell:Cell, unwalkable:Vector.<Loc> = null):Vector.<Cell> {
 			var result:Vector.<Cell> = new Vector.<Cell>;
 			for each (var neighbor:Loc in cell.loc.neighbors){
 				var nCell:Cell = cellAt(neighbor);
-				if (nCell != null && nCell.def.walkable)
+				if (nCell != null &&
+						nCell.def.walkable &&
+						(unwalkable == null || unwalkable.indexOf(nCell.loc) == -1))
 					result.push(nCell);
 			}
 			return result;
 		}
 		
-		public function findPaths(start:Loc, distance:uint):Dictionary {
+		public function findPaths(start:Loc, distance:uint,
+				unwalkable:Vector.<Loc> = null, unreachable:Vector.<Loc> = null):Dictionary {
+			
 			var startCell:Cell = cellAt(start);
 			startCell.visit(null, 0);
 			
@@ -74,7 +111,7 @@ package com.monarch.strat.gameplay {
 			while (unvisited.length != 0){
 				var current:Cell = unvisited.pop();
 				visited.push(current);
-				for each (var neighbor:Cell in walkableNeighborsFor(current)){
+				for each (var neighbor:Cell in walkableNeighborsFor(current, unwalkable)){
 					var neighborDist:uint = current.distance + neighbor.def.cost;
 					if (neighborDist <= distance && neighborDist < neighbor.distance) {
 						neighbor.visit(current, neighborDist);
@@ -85,10 +122,12 @@ package com.monarch.strat.gameplay {
 			}
 			var result:Dictionary = new Dictionary;
 			for each (var dest:Cell in visited){
-				var path:Vector.<Loc> = new Vector.<Loc>;
-				for (var cur:Cell = dest; cur != null; cur = cur.previous)
-					path.unshift(cur.loc);
-				result[dest.loc] = new Path(path);
+				if(unreachable == null || unreachable.indexOf(dest.loc) == -1) {
+					var path:Vector.<Loc> = new Vector.<Loc>;
+					for (var cur:Cell = dest; cur != null; cur = cur.previous)
+						path.unshift(cur.loc);
+					result[dest.loc] = new Path(path);
+				}
 			}
 			for each (var c:Cell in visited) c.reset();
 			return result;

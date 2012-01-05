@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<unit team="friend" portrait="sigurd">
-	<name first="Sigurd"/>
+<unit team="foe" portrait="genericFoe">
+	<name first="Steve"/>
 
-	<level start="1" />
 	
 	<stat type="maxHP"      start="19" levelUp="80" />
 	<stat type="strength"   start="4"  levelUp="50" />
@@ -13,7 +12,5 @@
 	<stat type="vitality"   start="4"  levelUp="45" />
 	<stat type="resistance" start="5"  levelUp="40" />
 	<stat type="movement"   start="5"  levelUp="0" />
-	
-	<equipped weapon="Shortsword" />
 	
 </unit>

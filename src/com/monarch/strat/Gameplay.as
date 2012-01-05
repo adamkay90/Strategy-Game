@@ -1,21 +1,18 @@
 package com.monarch.strat {
 	import com.monarch.strat.gameplay.unit.Stat;
 	import com.monarch.strat.gameplay.updatefun.UnitSelect;
-	import com.monarch.strat.gameplay.unit.UnitDef;
 	import com.monarch.strat.ui.*;
 	import com.monarch.strat.gameplay.*;
 	import net.flashpunk.*;
 	
 	public class Gameplay extends World {
 		
-		private var units:Object = new Object;
-		
 		private var display:List;
 
 		public function Gameplay(tag:String){
-			_stage = new Stage(XML(new Assets.stages[tag]), this);
+			_stage = new Stage(tag, this);
 
-			display = new List(Vector.<Item>([new Item("")]), 800);
+			display = new List(Vector.<ListItem>([new ListItem("")]), 800);
 			display.x = 0;
 			display.y = 0;
 			add(display);
@@ -24,18 +21,6 @@ package com.monarch.strat {
 			selector.visible = false;
 			add(selector);
 
-			var vincent:UnitDef = new UnitDef("vincent");
-			var vincentUnit:Unit = new Unit(vincent, Loc.at(9, 9));
-			units["friend"] = Vector.<Unit>([vincentUnit]);
-
-			add(vincentUnit);
-			for each (var stat:Stat in vincent.stats) {
-				trace(stat.pureValue);
-			}
-			vincent.unmodifiedLevelUp();
-			vincent.unmodifiedLevelUp();
-			vincent.unmodifiedLevelUp();
-			trace(vincent.level);
 			updateFun = new UnitSelect();
 		}
 		
@@ -64,39 +49,17 @@ package com.monarch.strat {
 		public function set status(value:String):void { display.items[0].text = value; }
 
 		override public function update():void {
-			var newMouseLoc:Loc = Loc.at(FP.world.mouseX / GridBlock.SIZE, FP.world.mouseY / GridBlock.SIZE);
+			var newMouseLoc:Loc = Loc.at(
+				FP.world.mouseX / GridBlock.SIZE,
+				FP.world.mouseY / GridBlock.SIZE);
+			if(!stage.inBounds(newMouseLoc))
+				newMouseLoc = null;
 			_isNewMouseLoc = (newMouseLoc != mouseLoc);
 			_mouseLoc = newMouseLoc;
 			
 			updateFun.update();
 			super.update();
 		}
-		
-		// TODO: Finish this
-		public function scaleGrowths(unit:UnitDef):void {
-			// Have to save the original growths to have when we're done
-			var originalStats:Vector.<Stat> = unit.stats;
-			
-			var i:int = unit.level;
-			// Loops for gathering a sample
-			for (var x:int = 0; x < 200; x++) {
-				// Levels a copy of the character up, then saves it.
-				for (var y:int = unit.baseLevel; y < i; y++) {
-					
-				}	
-			}
-		}
-		
-		// TODO: Implement team
-		public function unitAt(loc:Loc, team:String = null):Unit {
-			for each(var unit:Unit in units[team]) {
-//				trace(unit.loc.x, unit.loc.y);
-				if(loc == unit.loc)
-					return unit;
-			}
-			return null;
-		}
-	
 	}
 
 }
