@@ -1,4 +1,5 @@
 package com.monarch.strat {
+	import com.monarch.strat.gameplay.unit.Stat;
 	import com.monarch.strat.gameplay.updatefun.UnitSelect;
 	import com.monarch.strat.gameplay.unit.UnitDef;
 	import com.monarch.strat.ui.*;
@@ -28,7 +29,13 @@ package com.monarch.strat {
 			units["friend"] = Vector.<Unit>([vincentUnit]);
 
 			add(vincentUnit);
-			
+			for each (var stat:Stat in vincent.stats) {
+				trace(stat.pureValue);
+			}
+			vincent.unmodifiedLevelUp();
+			vincent.unmodifiedLevelUp();
+			vincent.unmodifiedLevelUp();
+			trace(vincent.level);
 			updateFun = new UnitSelect();
 		}
 		
@@ -63,6 +70,21 @@ package com.monarch.strat {
 			
 			updateFun.update();
 			super.update();
+		}
+		
+		// TODO: Finish this
+		public function scaleGrowths(unit:UnitDef):void {
+			// Have to save the original growths to have when we're done
+			var originalStats:Vector.<Stat> = unit.stats;
+			
+			var i:int = unit.level;
+			// Loops for gathering a sample
+			for (var x:int = 0; x < 200; x++) {
+				// Levels a copy of the character up, then saves it.
+				for (var y:int = unit.baseLevel; y < i; y++) {
+					
+				}	
+			}
 		}
 		
 		// TODO: Implement team

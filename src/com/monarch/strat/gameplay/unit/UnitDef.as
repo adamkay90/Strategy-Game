@@ -21,10 +21,17 @@ package com.monarch.strat.gameplay.unit {
 			_firstName = nameXML.@first;
 			_lastName = nameXML.@last;
 			_nickName = ("@nick" in nameXML) ? nameXML.@nick : firstName;
+			
+			// Have to save base level
+			// var level:XML = xml["level"];
+			// _baseLevel = level.@start;
 		}
 		
 		public function get stats():Vector.<Stat> { return _stats; }
 		private var _stats:Vector.<Stat> = new Vector.<Stat>(StatType.SIZE);
+		
+		public function get baseLevel():uint { return _baseLevel; }
+		public var _baseLevel:uint; 
 				
 		public function get HP():int { return _HP; }
 		private var _HP:int;
@@ -33,7 +40,7 @@ package com.monarch.strat.gameplay.unit {
 		private var _exp:uint;
 		
 		public function get level():uint { return _level; }
-		private var _level:int;
+		private var _level:int = 1;
 
 		public function get firstName():String { return _firstName; }
 		private var _firstName:String;
@@ -54,7 +61,7 @@ package com.monarch.strat.gameplay.unit {
 				trace (stat.pureValue);
 			}
 		}
-			
+		
 	}
 	
 }

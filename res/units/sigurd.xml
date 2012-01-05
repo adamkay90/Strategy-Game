@@ -2,6 +2,7 @@
 <unit team="friend" portrait="sigurd">
 	<name first="Sigurd"/>
 
+	<level start="1" />
 	
 	<stat type="maxHP"      start="19" levelUp="80" />
 	<stat type="strength"   start="4"  levelUp="50" />
