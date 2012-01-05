@@ -13,4 +13,8 @@
 	<stat type="resistance" start="5"  levelUp="40" />
 	<stat type="movement"   start="5"  levelUp="0" />
 	
+	<items>
+		<weapon name="Shortsword" />
+	</items>
+	
 </unit>

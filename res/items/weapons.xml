@@ -1,19 +1,16 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<weapons>
-
-<sword>
-	<name="Shortsword" power="5" accuracy="100" weight="5" critical="0" rank="1" />
-	<name="Longsword" power="7" accuracy="90" weight="7" critical="0" rank="2" />
-</sword>
-
-<lance>
-	<name="Iron Lance" power="4" accuracy="110" weight="6" critical="0" rank="1" />
-	<name="Barbed Lance" power="6" accuracy="95" weight="8" critical="15" rank="2" />
-</lance>
-
-<axe>
-	<name="Hatchet" power="7" accuracy="90" weight="5" critical="0" rank="1" />
-	<name="Battle Axe" power="10" accuracy="80" weight="10" critical="5" rank="2" />
-</axe>
-
-</weapons>
+<items>
+	
+	<!-- swords -->
+	<weapon type="sword" name="Shortsword" power="5" accuracy="100" weight="5" critical="0" rank="1" />
+	<weapon type="sword" name="Longsword" power="7" accuracy="90" weight="7" critical="0" rank="2" />
+	
+	<!-- lances -->
+	<weapon type="lance" name="Iron Lance" power="4" accuracy="110" weight="6" critical="0" rank="1" />
+	<weapon type="lance" name="Barbed Lance" power="6" accuracy="95" weight="8" critical="15" rank="2" />
+	
+	<!-- axes -->
+	<weapon type="axe" name="Hatchet" power="7" accuracy="90" weight="5" critical="0" rank="1" />
+	<weapon type="axe" name="Battle Axe" power="10" accuracy="80" weight="10" critical="5" rank="2" />
+	
+</items>
