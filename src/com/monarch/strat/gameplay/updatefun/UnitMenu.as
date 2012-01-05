@@ -1,5 +1,8 @@
 package com.monarch.strat.gameplay.updatefun {
-	import com.monarch.strat.ui.Item;
+	import net.flashpunk.Tween;
+	import net.flashpunk.tweens.misc.Alarm;
+	import com.monarch.strat.gameplay.item.Weapon;
+	import com.monarch.strat.ui.ListItem;
 	import com.monarch.strat.ui.List;
 	import com.monarch.strat.gameplay.Unit;
 	import com.monarch.strat.gameplay.UpdateFun;
@@ -19,15 +22,21 @@ package com.monarch.strat.gameplay.updatefun {
 		public override function init(): void {
 			gp.status = "Choose an action";
 			
-			menu = new List(Vector.<Item>([
-				new Item(unit.def.nickName + "'s turn"),
+			menu = new List(Vector.<ListItem>([
+				new ListItem(unit.def.nickName + "'s turn"),
 				
-				new Item("Move", function():void {
+				new ListItem("Move", function():void {
 					gp.updateFun = new UnitMove(unit); }),
 				
-				new Item("Attack"),
+				new ListItem("Attack", function():void {
+					var weapon:Weapon = unit.def.weapon;
+					gp.status = weapon.name + "   power: " + weapon.power;
+					gp.addTween(new Alarm(2, function():void {
+						gp.updateFun = new UnitSelect();
+					}, Tween.ONESHOT), true);
+				}, unit.def.weapon != null),
 				
-				new Item("Cancel", function():void {
+				new ListItem("Cancel", function():void {
 					gp.updateFun = new UnitSelect(); })
 			]), 200);
 			

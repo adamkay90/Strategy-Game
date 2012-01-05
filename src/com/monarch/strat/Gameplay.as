@@ -11,7 +11,7 @@ package com.monarch.strat {
 		public function Gameplay(tag:String){
 			_stage = new Stage(tag, this);
 
-			display = new List(Vector.<Item>([new Item("")]), 800);
+			display = new List(Vector.<ListItem>([new ListItem("")]), 800);
 			display.x = 0;
 			display.y = 0;
 			add(display);

@@ -15,8 +15,8 @@ package com.monarch.strat.gameplay {
 		
 		public function Stage(asset: *, world: World){
 			var xml:XML =
-				(asset is XML) ? asset as XML :
-				(asset is String) ? XML(new Assets.stages[asset as String]) :
+				asset is XML? asset as XML :
+				asset is String? XML(new Assets.stages[asset as String]) :
 				null;
 			
 			var defs:Object = new Object;
@@ -40,8 +40,8 @@ package com.monarch.strat.gameplay {
 			
 			_units = new Vector.<Unit>;
 			for each (var xmlUnit:XML in xml["unit"]) {
-				trace("name:", typeof xmlUnit.@name);
-				var unit:Unit = new Unit(xmlUnit.@name.toString(), Loc.at(xmlUnit.@col, xmlUnit.@row));
+				var unit:Unit = new Unit(xmlUnit.@name.toString(),
+					Loc.at(xmlUnit.@col, xmlUnit.@row));
 				units.push(unit);
 				world.add(unit);
 			}
